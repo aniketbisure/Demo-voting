@@ -24,7 +24,6 @@
     color: white;
     margin: 0;
     line-height: 1.3;
-    font-family: var(--font-akshar);
 }
 
 /* Title Row */
@@ -397,7 +396,6 @@
     font-size: 2.5rem;
     margin: 0;
     font-weight: 400;
-    font-family: var(--font-akshar);
 }
 
 .whiteBody {
@@ -415,7 +413,6 @@
     font-size: 3.5rem;
     font-weight: 700;
     color: #003d7a;
-    font-family: 'Kruti Dev 010', 'Akshar', serif;
     line-height: 1.2;
     margin: 20px 0;
     font-style: italic;
