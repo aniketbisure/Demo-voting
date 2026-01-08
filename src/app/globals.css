@@ -10,7 +10,7 @@
 }
 
 body {
-  font-family: var(--font-hind), var(--font-poppins), var(--font-akshar), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: var(--font-poppins), var(--font-akshar), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   background-color: #f0f4f8;
   color: #000;
 }
