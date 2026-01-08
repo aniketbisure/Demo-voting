@@ -85,7 +85,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     <div className={styles.wardNumber}>{poll.subTitle}</div>
                     <div className={styles.demoTitle}>डमी मतदान यंत्र</div>
                     <a
-                        href={`https://wa.me/?text=${encodeURIComponent(`मी डेमो मतदान केले, तुम्ही केले का?\n${poll.title}\n${typeof window !== 'undefined' ? window.location.href : ""}`)}`}
+                        href={`https://wa.me/?text=${encodeURIComponent(`मी डेमो मतदान केले, तुम्ही केले का?\n${typeof window !== 'undefined' ? window.location.href : ""}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
