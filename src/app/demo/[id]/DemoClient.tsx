@@ -45,27 +45,33 @@ export default function DemoClient({ poll }: { poll: Poll }) {
     const cardRowColors = ['#ffffff', '#ffb6c1', '#ffffe0', '#add8e6'];
 
     const handleVote = (candidate: Candidate, unitIndex: number, isCorrect: boolean) => {
-        if (votedUnits.includes(unitIndex)) return;
-
         if (isCorrect) {
-            setVotedUnits([...votedUnits, unitIndex]);
+            const alreadyVoted = votedUnits.includes(unitIndex);
 
-            if (votedUnits.length + 1 === poll.candidates.length) {
-                setTimeout(() => {
-                    lastAudioRef.current?.play().catch(() => { });
-                    setShowThankYou(true);
-                }, 500);
+            if (!alreadyVoted) {
+                const newVoted = [...votedUnits, unitIndex];
+                setVotedUnits(newVoted);
+
+                if (newVoted.length === poll.candidates.length) {
+                    setTimeout(() => {
+                        lastAudioRef.current?.play().catch(() => { });
+                        setShowThankYou(true);
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        const nextUnit = unitIndex + 1;
+                        if (nextUnit < poll.candidates.length && unitRefs.current[nextUnit]) {
+                            unitRefs.current[nextUnit]?.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                            setCurrentUnit(nextUnit);
+                        }
+                    }, 500);
+                }
             } else {
-                setTimeout(() => {
-                    const nextUnit = unitIndex + 1;
-                    if (nextUnit < poll.candidates.length && unitRefs.current[nextUnit]) {
-                        unitRefs.current[nextUnit]?.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                        setCurrentUnit(nextUnit);
-                    }
-                }, 500);
+                // If already voted, just play sound or do nothing special but keep it clickable
+                console.log("Already voted for this unit");
             }
         }
     };
@@ -187,7 +193,6 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                         <button
                                                             className={styles.blueButton}
                                                             onClick={() => handleVote(candidate, cardIndex, isMainRow)}
-                                                            disabled={isVoted}
                                                         >
                                                             बटण दाबा
                                                         </button>

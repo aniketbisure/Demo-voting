@@ -140,8 +140,9 @@
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
+    border: 1px solid #000;
 }
 
 .tableHeader {
@@ -153,12 +154,17 @@
     font-weight: 600;
     font-size: 0.9rem;
     text-align: center;
-    border-bottom: 0.8px solid #999;
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+}
+
+.headerCell:last-child {
+    border-right: none;
 }
 
 .row {
-    height: 80px;
-    border-bottom: 0.8px solid #ccc;
+    height: 100px;
+    border-bottom: 1px solid #000;
 }
 
 .row:last-child {
@@ -178,7 +184,7 @@
     font-weight: bold;
     font-size: 1.2rem;
     padding: 5px;
-    border-right: 0.8px solid #ccc;
+    border-right: 1px solid #000;
 }
 
 .cellName {
@@ -186,21 +192,23 @@
     padding-left: 15px;
     font-weight: 700;
     font-size: 1.05rem;
-    border-right: 0.8px solid #ccc;
+    border-right: 1px solid #000;
 }
 
 .cellSymbol {
-    width: 80px;
+    width: 100px;
     text-align: center;
     padding: 5px;
-    border-right: 0.8px solid #ccc;
+    border-right: 1px solid #000;
     position: relative;
 }
 
 .cellButton {
-    width: 160px;
+    width: 170px;
     text-align: center;
     padding: 5px;
+    background-color: #f0f0f0;
+    border-right: none;
 }
 
 .symbolImg {
