@@ -228,7 +228,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                             ✕
                         </button>
                         <div className={styles.blueHeader}>
-                            <h2 className={styles.thankYouTitle}>मतदान प्रक्रिया पूर्ण</h2>
+                            <h4 className={styles.thankYouTitle}>धन्यवाद!</h4>
                         </div>
                         <div className={styles.whiteBody}>
                             <div className={styles.modalCandidateGrid}>
