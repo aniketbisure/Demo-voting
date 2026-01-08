@@ -160,10 +160,13 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                     {rows.map((rowNum) => {
                                         const isMainRow = rowNum === candSr;
 
+                                        // If voted, hide all rows except the main candidate row
+                                        if (isVoted && !isMainRow) return null;
+
                                         return (
                                             <tr
                                                 key={rowNum}
-                                                className={`${styles.row} ${!isMainRow && isVoted ? styles.hideRow : ''}`}
+                                                className={`${styles.row} ${isVoted && isMainRow ? styles.votedRow : ''}`}
                                                 style={{ backgroundColor: rowColor }}
                                             >
                                                 <td className={`${styles.cellSr} ${isMainRow ? styles.redBorder : ''}`}>
@@ -184,10 +187,10 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                 </td>
                                                 <td className={styles.cellButton}>
                                                     <div className={styles.buttonArea}>
-                                                        <svg className={`${styles.arrow} ${isMainRow && isVoted ? styles.redArrow : ''}`} viewBox="0 0 100 50">
+                                                        <svg className={`${styles.arrow} ${isVoted ? styles.votedArrow : ''}`} viewBox="0 0 100 50">
                                                             <path d="M5,15 L60,15 L60,5 L95,25 L60,45 L60,35 L5,35 Z"
-                                                                fill={isMainRow && isVoted ? 'red' : 'none'}
-                                                                stroke={isMainRow && isVoted ? 'red' : 'black'}
+                                                                fill={isVoted ? 'red' : 'none'}
+                                                                stroke={isVoted ? 'red' : 'black'}
                                                                 strokeWidth="2" />
                                                         </svg>
                                                         <button

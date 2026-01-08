@@ -293,6 +293,24 @@
     filter: drop-shadow(0 0 3px red);
 }
 
+.votedArrow {
+    width: 120px !important;
+    height: 80px !important;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 0, 0.5));
+}
+
+.votedRow {
+    height: 150px !important;
+}
+
+.votedRow td {
+    border-right: none !important;
+}
+
+.votedRow .cellButton {
+    border-left: 1px solid #000 !important;
+}
+
 /* Hide Row Animation */
 .hideRow {
     animation: slideUp 500ms ease-out forwards;
