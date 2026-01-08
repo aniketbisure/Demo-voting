@@ -1,0 +1,420 @@
+/* Main Container */
+.mainWrapper {
+    min-height: 100vh;
+    background-color: #ffffff;
+    padding-bottom: 30px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Header Gradient */
+.headerGradient {
+    background: linear-gradient(90deg, rgb(254, 144, 5) 0%, rgb(246, 80, 6) 50%);
+    padding: 12px;
+    text-align: center;
+}
+
+.electionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    line-height: 1.3;
+    font-family: var(--font-akshar);
+}
+
+/* Title Row */
+.titleRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.wardNumber {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.demoTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #d32f2f;
+    flex: 1;
+    text-align: center;
+}
+
+.shareButton {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.whatsappIcon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Info Boxes */
+.blueInfo {
+    background-color: #003399;
+    color: white;
+    margin: 15px;
+    padding: 12px 20px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.yellowInfo {
+    background-color: #fbd700;
+    color: #000;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.yellowTitle {
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #d32f2f;
+}
+
+.candidateList {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.candidateList li {
+    margin: 5px 0;
+}
+
+.yellowFooter {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* Date Box */
+.dateBox {
+    background-color: #fbd700;
+    color: #000;
+    margin: 15px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* EVM Container (Card) */
+.evmContainer {
+    background-color: #e6e6e6;
+    margin: 15px;
+    padding: 15px;
+    border-radius: 25px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 15px 0px;
+}
+
+/* Candidate Table */
+.candidateTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tableHeader {
+    background-color: #e6e6e6;
+}
+
+.headerCell {
+    padding: 10px 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    border-bottom: 0.8px solid #999;
+}
+
+.row {
+    height: 80px;
+    border-bottom: 0.8px solid #ccc;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+/* Red Border on Main Candidate */
+.redBorder {
+    border-left: 2.4px solid red;
+    position: relative;
+}
+
+/* Table Cells */
+.cellSr {
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 5px;
+    border-right: 0.8px solid #ccc;
+}
+
+.cellName {
+    text-align: left;
+    padding-left: 15px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-right: 0.8px solid #ccc;
+}
+
+.cellSymbol {
+    width: 80px;
+    text-align: center;
+    padding: 5px;
+    border-right: 0.8px solid #ccc;
+    position: relative;
+}
+
+.cellButton {
+    width: 160px;
+    text-align: center;
+    padding: 5px;
+}
+
+.symbolImg {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+}
+
+/* Button Area with Arrow */
+.buttonArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.arrow {
+    width: 60px;
+    height: 40px;
+}
+
+.blueButton {
+    background-color: rgb(0, 51, 153);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 80px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.blueButton:hover {
+    background-color: rgb(0, 40, 120);
+}
+
+.blueButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px;
+    font-size: 0.85rem;
+    color: #666;
+    background: white;
+    border-top: 0.8px solid rgba(0, 0, 255, 0.11);
+}
+
+.footer a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+/* Red Lamp Indicator */
+.redLamp {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    box-shadow: 0 0 10px red;
+    animation: blink 0.5s infinite;
+}
+
+/* Red Arrow when voted */
+.redArrow {
+    filter: drop-shadow(0 0 3px red);
+}
+
+/* Hide Row Animation */
+.hideRow {
+    animation: slideUp 500ms ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        max-height: 80px;
+        opacity: 1;
+    }
+
+    to {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+/* Thank You Modal */
+.thankYouModal {
+    background: white;
+    border-radius: 0;
+    padding: 0;
+    width: 90%;
+    max-width: 400px;
+    color: #333;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.closeIcon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.blueHeader {
+    background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+    padding: 40px 20px;
+    color: white;
+}
+
+.thankYouTitle {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 400;
+    font-family: var(--font-akshar);
+}
+
+.whiteBody {
+    background: white;
+    padding: 40px 20px;
+}
+
+.subText {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.mainText {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #003d7a;
+    font-family: 'Kruti Dev 010', 'Akshar', serif;
+    line-height: 1.2;
+    margin: 20px 0;
+    font-style: italic;
+}
+
+.message {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 30px 0 20px;
+    line-height: 1.6;
+}
+
+.closeBtn {
+    background: linear-gradient(135deg, #ff6600 0%, #ff8800 100%);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 40px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    text-transform: capitalize;
+}
+
+.closeBtn:hover {
+    background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+}

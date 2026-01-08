@@ -1,66 +1,174 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+import React, { useState } from 'react';
+import { createPoll } from './actions';
+import styles from './page.module.css';
+import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type } from 'lucide-react';
+
+interface CandidateRow {
+    name: string;
+    seat: string;
+    sr: string;
+}
+
+export default function CreatePollPage() {
+    const [candidates, setCandidates] = useState<CandidateRow[]>([
+        { name: '', seat: 'A', sr: '1' }
+    ]);
+    const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
+
+    const addCandidate = () => {
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString() }]);
+    };
+
+
+    const removeCandidate = (index: number) => {
+        if (candidates.length > 1) {
+            const newCandidates = [...candidates];
+            newCandidates.splice(index, 1);
+            setCandidates(newCandidates);
+        }
+    };
+
+    const updateCandidate = (index: number, field: keyof CandidateRow, value: string) => {
+        const newCandidates = [...candidates];
+        newCandidates[index][field] = value;
+        setCandidates(newCandidates);
+    };
+
+    const handleSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSymbolPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const today = new Date().toISOString().split('T')[0];
+
+    return (
+        <main className={styles.main}>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <Vote className={styles.headerIcon} />
+                    <h1 className={styles.title}>डेमो मतदान यंत्र तयार करा</h1>
+                    <p className={styles.subtitle}>निवडणूक तपशील भरा आणि नवीन पोल तयार करा</p>
+                </div>
+
+                <form action={createPoll} className={styles.form}>
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती</h2>
+
+                        <div className={styles.formGrid}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Type size={16} /> मुख्य शीर्षक</label>
+                                <input name="title" className={styles.input} placeholder="उदा. महानगरपालिका निवडणूक २०२६" required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Type size={16} /> उप-शीर्षक (प्रभाग)</label>
+                                <input name="subTitle" className={styles.input} placeholder="उदा. प्रभाग क्रमांक २०" required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Briefcase size={16} /> पक्षाचे नाव</label>
+                                <input name="partyName" className={styles.input} placeholder="उदा. शिवसेना" required />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Calendar size={16} /> मतदानाची तारीख</label>
+                                <input
+                                    type="date"
+                                    name="votingDate"
+                                    className={styles.input}
+                                    min={today}
+                                    defaultValue={today}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}><ImageIcon size={16} /> पक्षाचे चिन्ह (Image Upload)</label>
+                            <input
+                                type="file"
+                                name="mainSymbolFile"
+                                className={styles.input}
+                                accept="image/*"
+                                onChange={handleSymbolChange}
+                                required
+                            />
+                            {symbolPreview && (
+                                <div className={styles.previewContainer}>
+                                    <img src={symbolPreview} alt="Preview" className={styles.previewImage} />
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
+
+
+                    <section className={styles.section}>
+                        <div className={styles.sectionHeader}>
+                            <h2 className={styles.sectionTitle}><Type size={20} /> उमेदवार यादी</h2>
+                            <button type="button" onClick={addCandidate} className={styles.addButton}>
+                                <Plus size={16} /> उमेदवार जोडा
+                            </button>
+                        </div>
+
+                        <div className={styles.candidateList}>
+                            {candidates.map((c, i) => (
+                                <div key={i} className={styles.candidateRow}>
+                                    <div className={styles.rowField} style={{ flex: 1 }}>
+                                        <label className={styles.label}>अ. क्र. (Sr. No.)</label>
+                                        <input
+                                            name={`candidateSr_${i}`}
+                                            className={styles.input}
+                                            value={c.sr}
+                                            onChange={(e) => updateCandidate(i, 'sr', e.target.value)}
+                                            placeholder="2"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 3 }}>
+                                        <label className={styles.label}>उमेदवाराचे नाव</label>
+                                        <input
+                                            name={`candidateName_${i}`}
+                                            className={styles.input}
+                                            value={c.name}
+                                            onChange={(e) => updateCandidate(i, 'name', e.target.value)}
+                                            placeholder="नाव लिहा"
+                                            required
+                                        />
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 1 }}>
+                                        <label className={styles.label}>जागा</label>
+                                        <input
+                                            name={`candidateSeat_${i}`}
+                                            className={styles.input}
+                                            value={c.seat}
+                                            onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
+                                            placeholder="उदा. अ"
+                                        />
+                                    </div>
+                                    {candidates.length > 1 && (
+                                        <button type="button" onClick={() => removeCandidate(i)} className={styles.removeButton}>
+                                            <Trash2 size={18} />
+                                        </button>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    <button type="submit" className={styles.submitButton}>
+                        पोल तयार करा <Vote size={20} style={{ marginLeft: '10px' }} />
+                    </button>
+                </form>
+            </div>
+        </main>
+    );
 }
