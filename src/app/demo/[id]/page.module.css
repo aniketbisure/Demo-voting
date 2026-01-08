@@ -470,9 +470,9 @@
 }
 
 .modalImageContainer {
-    width: 60px;
-    height: 60px;
-    margin: 0 auto 8px;
+    width: 85px;
+    height: 100px;
+    margin: 0 auto 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -485,17 +485,18 @@
 }
 
 .modalSeatLabel {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #e63946;
     font-weight: 700;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     text-transform: uppercase;
 }
 
 .modalCandidateName {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #333;
+    line-height: 1.2;
 }
 
 /* Scrollbar styling */
