@@ -70,8 +70,10 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     }, 500);
                 }
             } else {
-                // If already voted, just play sound or do nothing special but keep it clickable
-                console.log("Already voted for this unit");
+                // If already voted for this unit, but all units are complete, show the thank you modal
+                if (votedUnits.length === poll.candidates.length) {
+                    setShowThankYou(true);
+                }
             }
         }
     };
