@@ -177,22 +177,12 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                 </td>
                                                 <td className={styles.cellSymbol}>
                                                     {isMainRow && (
-                                                        <div className={styles.symbolContainer}>
-                                                            <div className={styles.symbolFlex}>
-                                                                <img src={poll.mainSymbolUrl}
-                                                                    alt="Party Symbol"
-                                                                    className={styles.partySymbolImg} />
-                                                                {candidate.symbolUrl !== poll.mainSymbolUrl && (
-                                                                    <>
-                                                                        <div className={styles.symbolDivider}></div>
-                                                                        <img src={candidate.symbolUrl}
-                                                                            alt="Candidate Photo"
-                                                                            className={styles.candidatePhotoImg} />
-                                                                    </>
-                                                                )}
-                                                            </div>
+                                                        <>
+                                                            <img src={poll.mainSymbolUrl}
+                                                                alt="Symbol"
+                                                                className={styles.symbolImg} />
                                                             {isVoted && <div className={styles.redLamp}></div>}
-                                                        </div>
+                                                        </>
                                                     )}
                                                 </td>
                                                 <td className={styles.cellButton}>
