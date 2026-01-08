@@ -85,7 +85,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     <div className={styles.wardNumber}>{poll.subTitle}</div>
                     <div className={styles.demoTitle}>डमी मतदान यंत्र</div>
                     <a
-                        href={`https://wa.me/?text=${encodeURIComponent(`मी डेमो मतदान केले, तुम्ही केले का?\n${typeof window !== 'undefined' ? window.location.href : ""}`)}`}
+                        href={`https://wa.me/?text=${encodeURIComponent(`${typeof window !== 'undefined' ? window.location.href : ""}\nमी डेमो मतदान केले, तुम्ही केले का?`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
@@ -99,7 +99,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 </div>
 
                 {/* Yellow Info Box */}
-                <div className={styles.yellowInfo}>
+                <div classNstyles.yellowInfo}>
                     <div className={styles.yellowTitle}>
                         {poll.yellowTitleText || defaultYellowTitle}
                     </div>
@@ -119,7 +119,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Date Box */}
                 <div className={styles.dateBox}>
                     {poll.votingDate || "मतदान दि.- १५/०१/२०२६ रोजी स. ७ ते सायं. ६ पर्यंत"}
-                </div>
+                </div>ame={
 
                 {/* EVM Cards */}
                 {poll.candidates.map((candidate, cardIndex) => {
