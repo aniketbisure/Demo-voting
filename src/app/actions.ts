@@ -68,10 +68,7 @@ export async function createPoll(formData: FormData) {
     };
 
     // Save to Vercel KV
-    // We store all polls in a list or as individual keys. 
-    // Individual keys 'poll:{id}' is more efficient for the detail page.
     await kv.set(`poll:${id}`, newPoll);
 
-    // Also optional: keep a list of all IDs if needed, but for now we just redirect
     redirect(`/demo/${id}`);
 }
