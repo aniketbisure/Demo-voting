@@ -79,7 +79,7 @@ export default function CreatePollPage() {
     if (!isAuthorized) {
         return (
             <main className={styles.main}>
-                <div className={styles.container} style={{ maxWidth: '400px', marginTop: '100px' }}>
+                <div className={styles.container} style={{ maxWidth: '400px', marginTop: '40px' }}>
                     <div className={styles.header}>
                         <Vote className={styles.headerIcon} />
                         <h1 className={styles.title}>प्रवेश प्रतिबंधित</h1>

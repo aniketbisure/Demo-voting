@@ -34,6 +34,7 @@
     padding: 8px 15px;
     background: white;
     border-bottom: 1px solid #eee;
+    margin-top: 0 !important;
 }
 
 .wardNumber {
@@ -392,19 +393,19 @@
 
 .blueHeader {
     background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
-    padding: 15px 20px;
+    padding: 10px 20px;
     color: white;
 }
 
 .thankYouTitle {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     margin: 0;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .whiteBody {
     background: white;
-    padding: 15px 15px;
+    padding: 10px 10px;
 }
 
 .subText {
