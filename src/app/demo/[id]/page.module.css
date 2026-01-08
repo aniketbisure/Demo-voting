@@ -261,15 +261,28 @@
 /* Footer */
 .footer {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    padding: 20px;
-    font-size: 0.85rem;
+    gap: 12px;
+    padding: 25px 20px;
+    font-size: 0.9rem;
     color: #666;
     background: white;
     border-top: 0.8px solid rgba(0, 0, 255, 0.11);
+    text-align: center;
+}
+
+.contactEmail {
+    line-height: 1.5;
+}
+
+.bigContact {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0070f3 !important;
+    display: block;
+    margin-top: 5px;
 }
 
 .footer a {
@@ -627,14 +640,6 @@
 
     .thankYouTitle {
         font-size: 1.25rem;
-    }
-
-    .footer {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-        padding: 15px;
-        font-size: 0.75rem;
     }
 }
 
