@@ -30,13 +30,16 @@ export default function DemoClient({ poll }: { poll: Poll }) {
     const [votedUnits, setVotedUnits] = useState<number[]>([]);
     const [showThankYou, setShowThankYou] = useState(false);
     const [currentUnit, setCurrentUnit] = useState(0);
+    const [shareUrl, setShareUrl] = useState('');
 
     const lastAudioRef = useRef<HTMLAudioElement | null>(null);
-
     const unitRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
         lastAudioRef.current = new Audio('/sounds/sound.mp3');
+        if (typeof window !== 'undefined') {
+            setShareUrl(window.location.href);
+        }
     }, []);
 
     const cardRowColors = ['#ffffff', '#ffb6c1', '#ffffe0', '#add8e6'];
@@ -85,7 +88,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     <div className={styles.wardNumber}>{poll.subTitle}</div>
                     <div className={styles.demoTitle}>डमी मतदान यंत्र</div>
                     <a
-                        href={`https://wa.me/?text=${encodeURIComponent(`${typeof window !== 'undefined' ? window.location.href : ""}\nमी डेमो मतदान केले, तुम्ही केले का?`)}`}
+                        href={`https://wa.me/?text=${encodeURIComponent(`${shareUrl}\nमी डेमो मतदान केले, तुम्ही केले का?`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                     >
