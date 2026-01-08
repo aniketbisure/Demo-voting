@@ -213,9 +213,8 @@ export default function DemoClient({ poll }: { poll: Poll }) {
 
                 {/* Footer */}
                 <footer className={styles.footer}>
-                    <div>धन्यवाद</div>
                     <div>2025 © <a href="https://eduapp.in">eduapp.in</a></div>
-                    <div>Crafted with ❤️ by <a href="tel:9823586999">9823586999</a></div>
+                    <div>Crafted with ❤️ by <a href="tel:9657301344">9657301344</a></div>
                 </footer>
             </div>
 
