@@ -20,6 +20,7 @@ export async function createPoll(formData: FormData) {
     if (symbolFile && symbolFile.name) {
         const blob = await put(symbolFile.name, symbolFile, {
             access: 'public',
+            addRandomSuffix: true,
         });
         mainSymbolUrl = blob.url;
     }
