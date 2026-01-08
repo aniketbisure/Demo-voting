@@ -110,17 +110,17 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Yellow Info Box */}
                 <div className={styles.yellowInfo}>
                     <div className={styles.yellowTitle}>
-                        {poll.yellowTitleText || defaultYellowTitle}
+                        मतदानाच्या दिवशी सुद्धा "<strong>{poll.partyName}</strong>" पक्षाचे लोकप्रिय उमेदवार
                     </div>
                     <ul className={styles.candidateList}>
                         {poll.candidates.map((c, i) => (
                             <li key={i}>
-                                <strong>{c.seat}</strong> - {c.name}
+                                <strong>जागा {c.seat}</strong> - {c.name}
                             </li>
                         ))}
                     </ul>
                     <div className={styles.yellowFooter}>
-                        {poll.yellowFooterText || defaultYellowFooter}
+                        यांना त्यांच्या नाव व <strong>{poll.partyName}</strong> निशाणी समोरील बटन दाबून प्रचंड मताने विजयी करा!
                     </div>
                 </div>
 

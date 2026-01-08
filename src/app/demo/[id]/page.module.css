@@ -99,18 +99,21 @@
 }
 
 .candidateList {
-    margin: 10px 0;
-    padding-left: 20px;
+    margin: 15px 0;
+    padding-left: 25px;
+    list-style-type: disc;
 }
 
 .candidateList li {
-    margin: 5px 0;
+    margin: 8px 0;
+    font-size: 1rem;
 }
 
 .yellowFooter {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    font-style: italic;
+    margin-top: 15px;
+    font-size: 0.95rem;
+    text-align: center;
+    line-height: 1.5;
 }
 
 /* Date Box */
