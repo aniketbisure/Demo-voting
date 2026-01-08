@@ -354,15 +354,17 @@
     align-items: center;
     z-index: 1000;
     backdrop-filter: blur(5px);
+    overflow-y: auto;
+    padding: 20px 0;
 }
 
 /* Thank You Modal */
 .thankYouModal {
     background: white;
-    border-radius: 0;
+    border-radius: 15px;
     padding: 0;
-    width: 90%;
-    max-width: 400px;
+    width: 95%;
+    max-width: 550px;
     color: #333;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -447,11 +449,10 @@
 .modalCandidateGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 20px;
     margin-bottom: 20px;
-    max-height: 350px;
-    overflow-y: auto;
-    padding: 10px;
+    max-height: none;
+    padding: 15px;
 }
 
 .modalCandidateBox {
@@ -470,9 +471,9 @@
 }
 
 .modalImageContainer {
-    width: 85px;
-    height: 100px;
-    margin: 0 auto 5px;
+    width: 110px;
+    height: 130px;
+    margin: 0 auto 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -485,18 +486,18 @@
 }
 
 .modalSeatLabel {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: #e63946;
     font-weight: 700;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     text-transform: uppercase;
 }
 
 .modalCandidateName {
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     color: #333;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 /* Scrollbar styling */
