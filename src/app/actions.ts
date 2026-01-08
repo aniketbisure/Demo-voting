@@ -1,7 +1,7 @@
 'use server'
 
 import { put } from '@vercel/blob';
-import { kv } from '@vercel/kv';
+import { getRedisClient } from '@/lib/redis';
 import { redirect } from 'next/navigation';
 
 export async function createPoll(formData: FormData) {
@@ -67,8 +67,9 @@ export async function createPoll(formData: FormData) {
         candidates
     };
 
-    // Save to Vercel KV
-    await kv.set(`poll:${id}`, newPoll);
+    // Save to Redis
+    const redis = await getRedisClient();
+    await redis.set(`poll:${id}`, JSON.stringify(newPoll));
 
     redirect(`/demo/${id}`);
 }

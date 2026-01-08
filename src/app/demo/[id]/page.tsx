@@ -1,9 +1,9 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { kv } from '@vercel/kv';
+import { getRedisClient } from '@/lib/redis';
 import DemoClient from './DemoClient';
 
-// Force dynamic so it reads from KV on every request
+// Force dynamic so it reads from Redis on every request
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
@@ -15,7 +15,9 @@ interface PageProps {
 // Metadata for OG tags
 export async function generateMetadata({ params }: PageProps) {
     const { id } = await params;
-    const poll: any = await kv.get(`poll:${id}`);
+    const redis = await getRedisClient();
+    const data = await redis.get(`poll:${id}`);
+    const poll = data ? JSON.parse(data) : null;
 
     if (!poll) return {};
 
@@ -32,7 +34,9 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function DemoPage({ params }: PageProps) {
     const { id } = await params;
-    const poll: any = await kv.get(`poll:${id}`);
+    const redis = await getRedisClient();
+    const data = await redis.get(`poll:${id}`);
+    const poll = data ? JSON.parse(data) : null;
 
     if (!poll) {
         return notFound();
