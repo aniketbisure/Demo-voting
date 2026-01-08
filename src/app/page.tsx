@@ -19,7 +19,7 @@ export default function CreatePollPage() {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         // You can change this password to whatever you like
-        if (password === 'admin758') {
+        if (password === 'mastermind800800') {
             setIsAuthorized(true);
             setError('');
         } else {
