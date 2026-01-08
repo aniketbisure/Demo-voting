@@ -221,7 +221,7 @@ export default function CreatePollPage() {
                                             onChange={(e) => handleCandidateImageChange(i, e)}
                                         />
                                         {c.imagePreview && (
-                                            <div className={styles.previewContainer} style={{ width: '50px', height: '50px', marginTop: '5px' }}>
+                                            <div className={styles.previewContainer} style={{ width: '40px', height: '40px', marginTop: '5px' }}>
                                                 <img src={c.imagePreview} alt="Preview" className={styles.previewImage} />
                                             </div>
                                         )}
