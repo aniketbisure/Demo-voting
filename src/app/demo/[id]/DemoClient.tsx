@@ -99,7 +99,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 </div>
 
                 {/* Yellow Info Box */}
-                <div classNstyles.yellowInfo}>
+                <div className={styles.yellowInfo}>
                     <div className={styles.yellowTitle}>
                         {poll.yellowTitleText || defaultYellowTitle}
                     </div>
@@ -119,7 +119,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Date Box */}
                 <div className={styles.dateBox}>
                     {poll.votingDate || "मतदान दि.- १५/०१/२०२६ रोजी स. ७ ते सायं. ६ पर्यंत"}
-                </div>ame={
+                </div>
 
                 {/* EVM Cards */}
                 {poll.candidates.map((candidate, cardIndex) => {
