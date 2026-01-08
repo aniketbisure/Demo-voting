@@ -29,6 +29,11 @@ export async function generateMetadata({ params }: PageProps) {
             description: poll.title,
             images: [poll.ogImage || poll.mainSymbolUrl],
         },
+        icons: {
+            icon: poll.mainSymbolUrl,
+            shortcut: poll.mainSymbolUrl,
+            apple: poll.mainSymbolUrl,
+        },
     };
 }
 
