@@ -444,3 +444,125 @@
 .closeBtn:hover {
     background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
 }
+
+/* Responsiveness */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 0 5px;
+    }
+
+    .electionTitle {
+        font-size: 0.9rem;
+    }
+
+    .demoTitle {
+        font-size: 1rem;
+    }
+
+    .wardNumber {
+        font-size: 0.85rem;
+    }
+
+    .blueInfo {
+        margin: 10px;
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+
+    .yellowInfo,
+    .dateBox {
+        margin: 10px;
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+
+    .evmContainer {
+        margin: 10px 5px;
+        padding: 10px;
+        border-radius: 15px;
+    }
+
+    .headerCell {
+        font-size: 0.75rem;
+        padding: 8px 2px;
+    }
+
+    /* Table Adjustments for Mobile */
+    .cellSr {
+        width: 35px;
+        font-size: 0.95rem;
+    }
+
+    .cellName {
+        font-size: 0.85rem;
+        padding-left: 8px;
+    }
+
+    .cellSymbol {
+        width: 70px;
+    }
+
+    .symbolImg {
+        width: 45px;
+        height: 45px;
+    }
+
+    .cellButton {
+        width: 120px;
+        padding: 2px;
+    }
+
+    .buttonArea {
+        gap: 2px;
+    }
+
+    .arrow {
+        width: 40px;
+        height: 30px;
+    }
+
+    .votedArrow {
+        width: 80px !important;
+        height: 60px !important;
+    }
+
+    .blueButton {
+        min-width: 65px;
+        padding: 8px;
+        font-size: 0.75rem;
+        height: 35px;
+    }
+
+    .row,
+    .votedRow {
+        height: auto !important;
+        min-height: 85px;
+    }
+
+    .votedRow {
+        min-height: 120px;
+    }
+
+    .thankYouModal {
+        width: 95%;
+    }
+
+    .mainText {
+        font-size: 2.5rem;
+    }
+
+    .thankYouTitle {
+        font-size: 1.8rem;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .cellButton {
+        width: 100px;
+    }
+
+    .arrow {
+        display: none;
+        /* Hide arrow on extremely small screens if it overlaps */
+    }
+}

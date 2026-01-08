@@ -195,6 +195,11 @@
 @media (max-width: 640px) {
   .container {
     padding: 20px;
+    border-radius: 0;
+  }
+
+  .title {
+    font-size: 1.5rem;
   }
 
   .candidateRow {
@@ -204,6 +209,39 @@
 
   .removeButton {
     align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 10px 5px;
+  }
+
+  .headerIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .section {
+    padding: 15px;
+  }
+
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+
+  .input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .submitButton {
+    font-size: 1.1rem;
+    padding: 12px;
   }
 }
 
