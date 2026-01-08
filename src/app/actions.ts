@@ -1,10 +1,8 @@
 'use server'
 
-import fs from 'fs';
-import path from 'path';
+import { put } from '@vercel/blob';
+import { kv } from '@vercel/kv';
 import { redirect } from 'next/navigation';
-
-const dataFilePath = path.join(process.cwd(), 'src/data/polls.json');
 
 export async function createPoll(formData: FormData) {
     const title = formData.get('title') as string;
@@ -15,25 +13,15 @@ export async function createPoll(formData: FormData) {
     const yellowTitleText = (formData.get('yellowTitleText') as string) || `मतदानाच्या दिवशी सुद्धा "${partyName}" पक्षाचे लोकप्रिय उमेदवार`;
     const yellowFooterText = (formData.get('yellowFooterText') as string) || "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!";
 
-
-    // Handle File Upload
+    // Handle File Upload via Vercel Blob
     const symbolFile = formData.get('mainSymbolFile') as File;
     let mainSymbolUrl = '';
 
     if (symbolFile && symbolFile.name) {
-        const bytes = await symbolFile.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
-        const fileName = `${Date.now()}_${symbolFile.name}`;
-        const uploadDir = path.join(process.cwd(), 'public/uploads');
-
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
-        const filePath = path.join(uploadDir, fileName);
-        fs.writeFileSync(filePath, buffer);
-        mainSymbolUrl = `/uploads/${fileName}`;
+        const blob = await put(symbolFile.name, symbolFile, {
+            access: 'public',
+        });
+        mainSymbolUrl = blob.url;
     }
 
     // Format Date: YYYY-MM-DD -> मतदान दि.- DD/MM/YYYY
@@ -79,14 +67,11 @@ export async function createPoll(formData: FormData) {
         candidates
     };
 
-    const fileContent = fs.readFileSync(dataFilePath, 'utf-8');
-    const polls = JSON.parse(fileContent);
-    polls.push(newPoll);
+    // Save to Vercel KV
+    // We store all polls in a list or as individual keys. 
+    // Individual keys 'poll:{id}' is more efficient for the detail page.
+    await kv.set(`poll:${id}`, newPoll);
 
-    fs.writeFileSync(dataFilePath, JSON.stringify(polls, null, 2));
-
+    // Also optional: keep a list of all IDs if needed, but for now we just redirect
     redirect(`/demo/${id}`);
 }
-
-
-

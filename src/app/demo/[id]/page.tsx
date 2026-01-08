@@ -1,10 +1,9 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import DemoClient from './DemoClient';
 
-// Force dynamic so it reads the file on every request
+// Force dynamic so it reads from KV on every request
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
@@ -13,21 +12,11 @@ interface PageProps {
     }>;
 }
 
-const getData = () => {
-    try {
-        const filePath = path.join(process.cwd(), 'src/data/polls.json');
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        return [];
-    }
-};
-
 // Metadata for OG tags
 export async function generateMetadata({ params }: PageProps) {
     const { id } = await params;
-    const pollsData = getData();
-    const poll = pollsData.find((p: any) => p.id === id);
+    const poll: any = await kv.get(`poll:${id}`);
+
     if (!poll) return {};
 
     return {
@@ -43,8 +32,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function DemoPage({ params }: PageProps) {
     const { id } = await params;
-    const pollsData = getData();
-    const poll = pollsData.find((p: any) => p.id === id);
+    const poll: any = await kv.get(`poll:${id}`);
 
     if (!poll) {
         return notFound();
