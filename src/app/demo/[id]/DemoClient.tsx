@@ -214,7 +214,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Footer */}
                 <footer className={styles.footer}>
                     <div>2025 © <a href="https://eduapp.in">eduapp.in</a></div>
-                    <div>Crafted with ❤️ by <a href="tel:9657301344">9657301344</a></div>
+                    <div>To create this kind of website, contact: <a href="tel:9657301344">9657301344</a></div>
                 </footer>
             </div>
 
@@ -226,12 +226,21 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                             ✕
                         </button>
                         <div className={styles.blueHeader}>
-                            <h2 className={styles.thankYouTitle}>धन्यवाद</h2>
+                            <h2 className={styles.thankYouTitle}>मतदान प्रक्रिया पूर्ण</h2>
                         </div>
                         <div className={styles.whiteBody}>
-                            <div className={styles.subText}>सर्वांचे मनापासून</div>
-                            <div className={styles.mainText}>धन्यवाद</div>
-                            <p className={styles.message}>डेमो मतदान पूर्ण झाले आहे! धन्यवाद!</p>
+                            <div className={styles.modalCandidateGrid}>
+                                {poll.candidates.map((c, i) => (
+                                    <div key={i} className={styles.modalCandidateBox}>
+                                        <div className={styles.modalImageContainer}>
+                                            <img src={c.symbolUrl} alt={c.name} />
+                                        </div>
+                                        <div className={styles.modalSeatLabel}>जागा {c.seat}</div>
+                                        <div className={styles.modalCandidateName}>{c.name}</div>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className={styles.message}>तुमचे डेमो मतदान यशस्वीरित्या पूर्ण झाले आहे!</p>
                             <button className={styles.closeBtn} onClick={() => setShowThankYou(false)}>
                                 Close
                             </button>

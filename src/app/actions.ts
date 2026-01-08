@@ -39,13 +39,28 @@ export async function createPoll(formData: FormData) {
         const name = formData.get(`candidateName_${i}`) as string;
         const seat = formData.get(`candidateSeat_${i}`) as string;
         const serialNumber = formData.get(`candidateSr_${i}`) as string;
+        const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
+
+        let candidateSymbolUrl = mainSymbolUrl;
+
+        if (candidateImageFile && candidateImageFile.name) {
+            try {
+                const blob = await put(candidateImageFile.name, candidateImageFile, {
+                    access: 'public',
+                    addRandomSuffix: true,
+                });
+                candidateSymbolUrl = blob.url;
+            } catch (err) {
+                console.error("Error uploading candidate image:", err);
+            }
+        }
 
         if (name) {
             candidates.push({
-                seat: seat || `जागा ${i + 1}`,
+                seat: seat || (i + 1).toString(),
                 name,
                 serialNumber: serialNumber || (i + 1).toString(),
-                symbolUrl: mainSymbolUrl,
+                symbolUrl: candidateSymbolUrl,
                 bgColor: '#fff'
             });
         }

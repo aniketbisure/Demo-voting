@@ -9,6 +9,7 @@ interface CandidateRow {
     name: string;
     seat: string;
     sr: string;
+    imagePreview: string | null;
 }
 
 export default function CreatePollPage() {
@@ -28,12 +29,12 @@ export default function CreatePollPage() {
     };
 
     const [candidates, setCandidates] = useState<CandidateRow[]>([
-        { name: '', seat: 'A', sr: '1' }
+        { name: '', seat: 'अ', sr: '1', imagePreview: null }
     ]);
     const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
 
     const addCandidate = () => {
-        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString() }]);
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null }]);
     };
 
 
@@ -45,10 +46,21 @@ export default function CreatePollPage() {
         }
     };
 
-    const updateCandidate = (index: number, field: keyof CandidateRow, value: string) => {
+    const updateCandidate = (index: number, field: keyof CandidateRow, value: string | null) => {
         const newCandidates = [...candidates];
-        newCandidates[index][field] = value;
+        (newCandidates[index] as any)[field] = value;
         setCandidates(newCandidates);
+    };
+
+    const handleCandidateImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                updateCandidate(index, 'imagePreview', reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,8 +208,23 @@ export default function CreatePollPage() {
                                             className={styles.input}
                                             value={c.seat}
                                             onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
-                                            placeholder="उदा. अ"
+                                            placeholder="उदा. अ, ब, क"
                                         />
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 2 }}>
+                                        <label className={styles.label}><ImageIcon size={16} /> फोटो</label>
+                                        <input
+                                            type="file"
+                                            name={`candidateImage_${i}`}
+                                            className={styles.input}
+                                            accept="image/*"
+                                            onChange={(e) => handleCandidateImageChange(i, e)}
+                                        />
+                                        {c.imagePreview && (
+                                            <div className={styles.previewContainer} style={{ width: '50px', height: '50px', marginTop: '5px' }}>
+                                                <img src={c.imagePreview} alt="Preview" className={styles.previewImage} />
+                                            </div>
+                                        )}
                                     </div>
                                     {candidates.length > 1 && (
                                         <button type="button" onClick={() => removeCandidate(i)} className={styles.removeButton}>
