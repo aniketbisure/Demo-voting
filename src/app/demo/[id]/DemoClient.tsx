@@ -88,12 +88,8 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                         href={`https://wa.me/?text=${encodeURIComponent(`${typeof window !== 'undefined' ? window.location.href : ""}\nमी डेमो मतदान केले, तुम्ही केले का?`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={styles.shareLink}
                     >
-                        <button className={styles.whatsappShareButton}>
-                            <img src="/wp.png" alt="WhatsApp" className={styles.whatsappBtnIcon} />
-                            <span>SHARE</span>
-                        </button>
+                        <img src="/wp.png" alt="WhatsApp" className={styles.whatsappIcon} style={{ width: '120px', height: 'auto' }} />
                     </a>
                 </div>
 

@@ -51,34 +51,24 @@
     text-align: center;
 }
 
-.shareLink {
-    text-decoration: none;
-}
-
-.whatsappShareButton {
+.shareButton {
     background-color: #25D366;
     color: white;
     border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-size: 1rem;
-    font-weight: 700;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    transition: transform 0.1s;
+    gap: 5px;
 }
 
-.whatsappShareButton:active {
-    transform: scale(0.96);
-}
-
-.whatsappBtnIcon {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1);
+.whatsappIcon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 /* Info Boxes */
