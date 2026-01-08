@@ -12,6 +12,21 @@ interface CandidateRow {
 }
 
 export default function CreatePollPage() {
+    const [password, setPassword] = useState('');
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        // You can change this password to whatever you like
+        if (password === 'admin758') {
+            setIsAuthorized(true);
+            setError('');
+        } else {
+            setError('चुकीचा पासवर्ड! कृपया पुन्हा प्रयत्न करा.');
+        }
+    };
+
     const [candidates, setCandidates] = useState<CandidateRow[]>([
         { name: '', seat: 'A', sr: '1' }
     ]);
@@ -48,6 +63,36 @@ export default function CreatePollPage() {
     };
 
     const today = new Date().toISOString().split('T')[0];
+
+    if (!isAuthorized) {
+        return (
+            <main className={styles.main}>
+                <div className={styles.container} style={{ maxWidth: '400px', marginTop: '100px' }}>
+                    <div className={styles.header}>
+                        <Vote className={styles.headerIcon} />
+                        <h1 className={styles.title}>प्रवेश प्रतिबंधित</h1>
+                        <p className={styles.subtitle}>पोल तयार करण्यासाठी पासवर्ड टाका</p>
+                    </div>
+                    <form onSubmit={handleLogin} className={styles.form}>
+                        <div className={styles.formGroup}>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className={styles.input}
+                                placeholder="पासवर्ड टाका"
+                                required
+                            />
+                        </div>
+                        {error && <p style={{ color: 'red', fontSize: '14px', marginBottom: '10px' }}>{error}</p>}
+                        <button type="submit" className={styles.submitButton}>
+                            Login
+                        </button>
+                    </form>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className={styles.main}>
