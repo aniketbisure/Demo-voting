@@ -3,12 +3,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './page.module.css';
 
-seat: string;
-name: string;
-symbolUrl: string;
-serialNumber ?: string;
-bgColor ?: string;
-partySymbolUrl ?: string;
+interface Candidate {
+    seat: string;
+    name: string;
+    symbolUrl: string;
+    serialNumber?: string;
+    bgColor?: string;
+    partySymbolUrl?: string;
 }
 
 
