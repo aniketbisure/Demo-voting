@@ -224,7 +224,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
 
                 {/* Footer */}
                 <footer className={styles.footer}>
-                    <div>2025 © <a href="pollchit.mastermindmedias.com">pollchit.mastermindmedias.com</a></div>
+                    <div>2025 © <a href="https://mmvoters.in">mmvoters.in</a></div>
                     <div className={styles.contactEmail}>To create this kind of website, contact:<br />  <a href="tel:9657301344" className={styles.bigContact}>9657301344</a></div>
                 </footer>
             </div>
@@ -240,17 +240,23 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                             <h4 className={styles.thankYouTitle}>धन्यवाद!</h4>
                         </div>
                         <div className={styles.whiteBody}>
-                            <div className={styles.modalCandidateGrid}>
-                                {poll.candidates.map((c, i) => (
-                                    <div key={i} className={styles.modalCandidateBox}>
-                                        <div className={styles.modalImageContainer}>
-                                            <img src={c.symbolUrl} alt={c.name} />
+                            {poll.showCandidateImages ? (
+                                <div className={styles.modalCandidateGrid}>
+                                    {poll.candidates.map((c, i) => (
+                                        <div key={i} className={styles.modalCandidateBox}>
+                                            <div className={styles.modalImageContainer}>
+                                                <img src={c.symbolUrl} alt={c.name} />
+                                            </div>
+                                            <div className={styles.modalSeatLabel}>जागा {c.seat}</div>
+                                            <div className={styles.modalCandidateName}>{c.name}</div>
                                         </div>
-                                        <div className={styles.modalSeatLabel}>जागा {c.seat}</div>
-                                        <div className={styles.modalCandidateName}>{c.name}</div>
-                                    </div>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className={styles.modalBigSymbolContainer}>
+                                    <img src={poll.mainSymbolUrl} alt="Party Symbol" className={styles.modalBigSymbol} />
+                                </div>
+                            )}
                             <p className={styles.message}>तुमचे डेमो मतदान यशस्वीरित्या पूर्ण झाले आहे!</p>
                             <button className={styles.closeBtn} onClick={() => setShowThankYou(false)}>
                                 Close

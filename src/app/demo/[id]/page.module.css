@@ -490,6 +490,20 @@
     padding: 15px;
 }
 
+/* NEW: Big Party Symbol in Modal */
+.modalBigSymbolContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.modalBigSymbol {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
 .modalCandidateBox {
     background: #fff;
     border: 1.8px solid #0070f3;
@@ -671,6 +685,12 @@
 
     .thankYouTitle {
         font-size: 1.25rem;
+    }
+
+    /* Adjust Big Symbol for Mobile */
+    .modalBigSymbol {
+        width: 150px;
+        height: 150px;
     }
 }
 
