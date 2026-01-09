@@ -603,11 +603,13 @@
 
     .cellName {
         font-size: 0.85rem;
-        padding-left: 8px;
+        padding-left: 12px;
+        padding-right: 15px;
     }
 
     .cellCandidate {
         width: 75px;
+        padding-left: 5px;
         /* Increased from 50px */
     }
 
