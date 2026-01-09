@@ -197,15 +197,30 @@ export default function EditPollPage() {
                         <div className={styles.formGrid}>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>निळा बॉक्स मजकूर</label>
-                                <input name="blueInfoText" defaultValue={poll.blueInfoText} className={styles.input} />
+                                <input
+                                    name="blueInfoText"
+                                    defaultValue={poll.blueInfoText}
+                                    className={styles.input}
+                                    placeholder={`डेमो मतदानासाठी ${poll.partyName} निशाणी समोरील निळे बटण दाबावे`}
+                                />
                             </div>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>पिवळा बॉक्स शीर्षक</label>
-                                <input name="yellowTitleText" defaultValue={poll.yellowTitleText} className={styles.input} />
+                                <input
+                                    name="yellowTitleText"
+                                    defaultValue={poll.yellowTitleText}
+                                    className={styles.input}
+                                    placeholder={`मतदानाच्या दिवशी सुद्धा "${poll.partyName}" पक्षाचे लोकप्रिय उमेदवार`}
+                                />
                             </div>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}>पिवळा बॉक्स तळटीप</label>
-                                <input name="yellowFooterText" defaultValue={poll.yellowFooterText} className={styles.input} />
+                                <input
+                                    name="yellowFooterText"
+                                    defaultValue={poll.yellowFooterText}
+                                    className={styles.input}
+                                    placeholder="यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!"
+                                />
                             </div>
                         </div>
                     </section>
