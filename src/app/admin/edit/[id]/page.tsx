@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { updatePoll, getPoll } from '../../../actions';
-import styles from '../../page.module.css';
+import styles from '../../../page.module.css';
 import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
