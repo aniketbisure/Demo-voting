@@ -80,7 +80,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
         }
     };
 
-    const defaultBlueText = "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा";
+    const defaultBlueText = `डेमो मतदानासाठी ${poll.partyName} निशाणी समोरील निळे बटण दाबावे`;
     const defaultYellowTitle = `मतदानाच्या दिवशी सुद्धा "${poll.partyName}" पक्षाचे लोकप्रिय उमेदवार`;
     const defaultYellowFooter = "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!";
 

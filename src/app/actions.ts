@@ -49,7 +49,7 @@ export async function createPoll(formData: FormData) {
         const subTitle = formData.get('subTitle') as string;
         const partyName = formData.get('partyName') as string;
         const votingDateRaw = formData.get('votingDate') as string;
-        const blueInfoText = (formData.get('blueInfoText') as string) || "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा";
+        const blueInfoText = (formData.get('blueInfoText') as string) || `डेमो मतदानासाठी ${partyName} निशाणी समोरील निळे बटण दाबावे`;
         const yellowTitleText = (formData.get('yellowTitleText') as string) || `मतदानाच्या दिवशी सुद्धा "${partyName}" पक्षाचे लोकप्रिय उमेदवार`;
         const yellowFooterText = (formData.get('yellowFooterText') as string) || "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!";
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
