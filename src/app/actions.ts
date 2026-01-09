@@ -82,12 +82,23 @@ export async function createPoll(formData: FormData) {
                 candidateSymbolUrl = mainSymbolUrl;
             }
 
+            const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
+            let partySymbolUrl = await uploadImage(candidatePartySymbolFile);
+
+            // If no specific party symbol, fallback to main party symbol?
+            // User requested "add its party logo", so if not provided, maybe main symbol is good default OR blank.
+            // Let's default to mainSymbolUrl if not provided, consistent with current behavior of "symbol" column.
+            if (!partySymbolUrl) {
+                partySymbolUrl = mainSymbolUrl;
+            }
+
             if (name) {
                 candidates.push({
                     seat: seat || (i + 1).toString(),
                     name,
                     serialNumber: serialNumber || (i + 1).toString(),
-                    symbolUrl: candidateSymbolUrl,
+                    symbolUrl: candidateSymbolUrl, // This is the candidate PHOTO
+                    partySymbolUrl: partySymbolUrl, // This is the new candidate PARTY SYMBOL
                     bgColor: '#fff'
                 });
             }
@@ -210,12 +221,19 @@ export async function updatePoll(id: string, formData: FormData) {
             const serialNumber = formData.get(`candidateSr_${i}`) as string;
             const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
             const existingSymbolUrl = formData.get(`candidateExistingSymbol_${i}`) as string;
+            const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
+            const existingPartySymbolUrl = formData.get(`candidateExistingPartySymbol_${i}`) as string;
 
             let candidateSymbolUrl = existingSymbolUrl || mainSymbolUrl;
-
             const newCandImage = await uploadImage(candidateImageFile);
             if (newCandImage) {
                 candidateSymbolUrl = newCandImage;
+            }
+
+            let partySymbolUrl = existingPartySymbolUrl || mainSymbolUrl;
+            const newPartySymbol = await uploadImage(candidatePartySymbolFile);
+            if (newPartySymbol) {
+                partySymbolUrl = newPartySymbol;
             }
 
             if (name) {
@@ -224,6 +242,7 @@ export async function updatePoll(id: string, formData: FormData) {
                     name,
                     serialNumber: serialNumber || (i + 1).toString(),
                     symbolUrl: candidateSymbolUrl,
+                    partySymbolUrl: partySymbolUrl,
                     bgColor: '#fff'
                 });
             }

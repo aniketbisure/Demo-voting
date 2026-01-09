@@ -10,6 +10,7 @@ interface CandidateRow {
     seat: string;
     sr: string;
     imagePreview: string | null;
+    partySymbolPreview: string | null;
 }
 
 export default function CreatePollPage() {
@@ -29,12 +30,12 @@ export default function CreatePollPage() {
     };
 
     const [candidates, setCandidates] = useState<CandidateRow[]>([
-        { name: '', seat: 'अ', sr: '1', imagePreview: null }
+        { name: '', seat: 'अ', sr: '1', imagePreview: null, partySymbolPreview: null }
     ]);
     const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
 
     const addCandidate = () => {
-        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null }]);
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null }]);
     };
 
 
@@ -58,6 +59,17 @@ export default function CreatePollPage() {
             const reader = new FileReader();
             reader.onloadend = () => {
                 updateCandidate(index, 'imagePreview', reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleCandidatePartySymbolChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                updateCandidate(index, 'partySymbolPreview', reader.result as string);
             };
             reader.readAsDataURL(file);
         }
@@ -239,6 +251,21 @@ export default function CreatePollPage() {
                                         {c.imagePreview && (
                                             <div className={styles.previewContainer} style={{ width: '40px', height: '40px', marginTop: '5px' }}>
                                                 <img src={c.imagePreview} alt="Preview" className={styles.previewImage} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 2 }}>
+                                        <label className={styles.label}><ImageIcon size={16} /> पक्ष चिन्ह</label>
+                                        <input
+                                            type="file"
+                                            name={`candidatePartySymbol_${i}`}
+                                            className={styles.input}
+                                            accept="image/*"
+                                            onChange={(e) => handleCandidatePartySymbolChange(i, e)}
+                                        />
+                                        {c.partySymbolPreview && (
+                                            <div className={styles.previewContainer} style={{ width: '40px', height: '40px', marginTop: '5px' }}>
+                                                <img src={c.partySymbolPreview} alt="Preview" className={styles.previewImage} />
                                             </div>
                                         )}
                                     </div>

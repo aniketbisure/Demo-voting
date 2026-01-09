@@ -3,12 +3,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './page.module.css';
 
-interface Candidate {
-    seat: string;
-    name: string;
-    symbolUrl: string;
-    serialNumber?: string;
-    bgColor?: string;
+seat: string;
+name: string;
+symbolUrl: string;
+serialNumber ?: string;
+bgColor ?: string;
+partySymbolUrl ?: string;
 }
 
 
@@ -189,7 +189,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                 <td className={styles.cellSymbol}>
                                                     {isMainRow && (
                                                         <>
-                                                            <img src={poll.mainSymbolUrl}
+                                                            <img src={candidate.partySymbolUrl || poll.mainSymbolUrl}
                                                                 alt="Symbol"
                                                                 className={styles.symbolImg} />
                                                             {isVoted && <div className={styles.redLamp}></div>}
