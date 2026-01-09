@@ -53,6 +53,7 @@ export async function createPoll(formData: FormData) {
         const yellowTitleText = (formData.get('yellowTitleText') as string) || "";
         const yellowFooterText = (formData.get('yellowFooterText') as string) || "";
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
+        const contactNumber = (formData.get('contactNumber') as string) || "";
 
         console.log("Form data parsed. Uploading main symbol...");
         // Handle File Upload
@@ -119,6 +120,7 @@ export async function createPoll(formData: FormData) {
             yellowTitleText,
             yellowFooterText,
             showCandidateImages,
+            contactNumber,
             candidates
         };
 
@@ -186,6 +188,7 @@ export async function updatePoll(id: string, formData: FormData) {
         const yellowTitleText = formData.get('yellowTitleText') as string;
         const yellowFooterText = formData.get('yellowFooterText') as string;
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
+        const contactNumber = (formData.get('contactNumber') as string) || "";
 
         // Existing data
         const redis = await getRedisClient();
@@ -261,6 +264,7 @@ export async function updatePoll(id: string, formData: FormData) {
             yellowTitleText,
             yellowFooterText,
             showCandidateImages,
+            contactNumber,
             candidates
         };
 

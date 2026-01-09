@@ -161,6 +161,11 @@ export default function EditPollPage() {
                                     required
                                 />
                             </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Briefcase size={16} /> संपर्क नंबर (Optional)</label>
+                                <input name="contactNumber" defaultValue={poll.contactNumber || ''} className={styles.input} placeholder="उदा. 91758xxxxx" />
+                            </div>
                         </div>
 
                         <div className={styles.formGroup}>

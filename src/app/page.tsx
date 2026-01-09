@@ -24,6 +24,7 @@ export default function CreatePollPage() {
         if (password === 'mastermind800800') {
             setIsAuthorized(true);
             setError('');
+            sessionStorage.setItem('admin_auth', 'true');
         } else {
             setError('चुकीचा पासवर्ड! कृपया पुन्हा प्रयत्न करा.');
         }
@@ -90,6 +91,9 @@ export default function CreatePollPage() {
 
     useEffect(() => {
         setToday(new Date().toISOString().split('T')[0]);
+        if (sessionStorage.getItem('admin_auth') === 'true') {
+            setIsAuthorized(true);
+        }
     }, []);
 
     if (!isAuthorized) {
@@ -161,6 +165,11 @@ export default function CreatePollPage() {
                                     defaultValue={today}
                                     required
                                 />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}><Briefcase size={16} /> संपर्क नंबर (Optional)</label>
+                                <input name="contactNumber" className={styles.input} placeholder="उदा. 91758xxxxx" />
                             </div>
                         </div>
 

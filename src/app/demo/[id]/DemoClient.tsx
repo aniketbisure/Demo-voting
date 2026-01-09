@@ -25,6 +25,7 @@ interface Poll {
     yellowTitleText?: string;
     yellowFooterText?: string;
     showCandidateImages?: boolean;
+    contactNumber?: string;
     candidates: Candidate[];
 }
 
@@ -226,7 +227,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Footer */}
                 <footer className={styles.footer}>
                     <div>2025 © <a href="https://mmvoters.in">mmvoters.in</a></div>
-                    <div className={styles.contactEmail}>To create this kind of website, contact:<br />  <a href="tel:9657301344" className={styles.bigContact}>9657301344</a></div>
+                    <div className={styles.contactEmail}>To create this kind of website, contact:<br />  <a href={`tel:${poll.contactNumber || '9657301344'}`} className={styles.bigContact}>{poll.contactNumber || '9657301344'}</a></div>
                 </footer>
             </div>
 
