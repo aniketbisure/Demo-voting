@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="mr" suppressHydrationWarning>
-      <body className={`${poppins.variable} ${akshar.variable}`}>{children}</body>
+      <body className={`${poppins.variable} ${akshar.variable}`} suppressHydrationWarning>{children}</body>
     </html>
   );
 

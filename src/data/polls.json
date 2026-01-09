@@ -1,188 +1,43 @@
 [
   {
-    "id": "CSMS20SENA",
+    "id": "B3QMZC",
     "title": "छत्रपती संभाजी नगर महानगरपालिका निवडणूक २०२६",
     "subTitle": "प्रभाग क्रमांक 20",
     "partyName": "शिवसेना",
-    "mainSymbolUrl": "https://drive.google.com/thumbnail?id=1D2gYdluEPSJojtxfDOFIs1_w0OLSkVeY&sz=w1000",
-    "ogImage": "https://drive.google.com/thumbnail?id=1Yii4NeQIkiS06bJJ7WNSDwITWUMv2Ufh&sz=w1000",
-    "votingDate": "मतदान दि.- १५/०१/२०२६ रोजी स. ७ ते सायं. ६ पर्यंत",
+    "mainSymbolUrl": "/uploads/1767937618412_Shiv-Sena-Logo-3.png",
+    "ogImage": "/uploads/1767937618412_Shiv-Sena-Logo-3.png",
+    "votingDate": "मतदान दि.- 15/01/2026 रोजी स. ७ ते सायं. ६ पर्यंत",
     "blueInfoText": "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा",
     "yellowTitleText": "मतदानाच्या दिवशी सुद्धा \"शिवसेना\" पक्षाचे लोकप्रिय उमेदवार",
     "yellowFooterText": "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!",
+    "showCandidateImages": true,
     "candidates": [
       {
-        "seat": "जागा अ",
+        "seat": "अ",
         "name": "राजेंद्र उत्तमराव वाहुळे",
-        "symbolUrl": "https://drive.google.com/thumbnail?id=1D2gYdluEPSJojtxfDOFIs1_w0OLSkVeY&sz=w1000",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "जागा ब",
-        "name": "चंद्रकला धर्मराज दहिफळे",
-        "symbolUrl": "https://drive.google.com/thumbnail?id=1D2gYdluEPSJojtxfDOFIs1_w0OLSkVeY&sz=w1000",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "जागा क",
-        "name": "वनिता गणेश जाधव",
-        "symbolUrl": "https://drive.google.com/thumbnail?id=1D2gYdluEPSJojtxfDOFIs1_w0OLSkVeY&sz=w1000",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "जागा ड",
-        "name": "ञंबक गणपत तुपे",
-        "symbolUrl": "https://drive.google.com/thumbnail?id=1D2gYdluEPSJojtxfDOFIs1_w0OLSkVeY&sz=w1000",
-        "bgColor": "#fff"
-      }
-    ]
-  },
-  {
-    "id": "EHV3TK",
-    "title": "छत्रपती संभाजी नगर महानगरपालिका निवडणूक २०२६",
-    "subTitle": "प्रभाग क्रमांक 20",
-    "partyName": "शिवसेना",
-    "mainSymbolUrl": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-    "ogImage": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-    "votingDate": "मतदान दि.- १५/०१/२०२६ रोजी स. ७ ते सायं. ६ पर्यंत",
-    "blueInfoText": "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा",
-    "yellowTitleText": "मतदानाच्या दिवशी सुद्धा \"शिवसेना\" पक्षाचे लोकप्रिय उमेदवार",
-    "yellowFooterText": "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!",
-    "candidates": [
-      {
-        "seat": "अ",
-        "name": "अनिकेत बिसुरे",
-        "symbolUrl": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "ब",
-        "name": "शुभम कुंभार",
-        "symbolUrl": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "क",
-        "name": "राम चव्हाण",
-        "symbolUrl": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "ड",
-        "name": "सुमित पवार",
-        "symbolUrl": "https://artworkbird.co.in/wp-content/uploads/2024/11/Shiv-Sena-Logo-3.png",
-        "bgColor": "#fff"
-      }
-    ]
-  },
-  {
-    "id": "KLVZ3",
-    "title": "Test Election",
-    "subTitle": "Ward 1",
-    "partyName": "Test Party",
-    "mainSymbolUrl": "https://placehold.co/100x100.png",
-    "ogImage": "https://placehold.co/100x100.png",
-    "votingDate": "",
-    "blueInfoText": "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा",
-    "yellowTitleText": "मतदानाच्या दिवशी सुद्धा पक्षाचे लोकप्रिय उमेदवार",
-    "yellowFooterText": "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!",
-    "candidates": [
-      {
-        "seat": "A",
-        "name": "Test Candidate",
-        "serialNumber": "5",
-        "symbolUrl": "https://placehold.co/100x100.png",
-        "bgColor": "#fff"
-      }
-    ]
-  },
-  {
-    "id": "ZFKRDI",
-    "title": "महानगरपालिका निवडणूक २०२६",
-    "subTitle": "प्रभाग १०",
-    "partyName": "चाचणी पक्ष",
-    "mainSymbolUrl": "/uploads/1767830962330_test-symbol.png",
-    "ogImage": "/uploads/1767830962330_test-symbol.png",
-    "votingDate": "मतदान दि.- 14/02/2026 रोजी स. ७ ते सायं. ६ पर्यंत",
-    "blueInfoText": "आपले मत मौल्यवान आहे",
-    "yellowTitleText": "मतदान केंद्रावर जा",
-    "yellowFooterText": "वेळ: सकाळी ७ ते सायंकाळी ६",
-    "candidates": [
-      {
-        "seat": "अ",
-        "name": "उमेदवार पाच",
-        "serialNumber": "5",
-        "symbolUrl": "/uploads/1767830962330_test-symbol.png",
-        "bgColor": "#fff"
-      }
-    ]
-  },
-  {
-    "id": "IGO0BB",
-    "title": "पुणे महानगर पालिका",
-    "subTitle": "प्रभाग क्रमांक 15",
-    "partyName": "शिवसेना",
-    "mainSymbolUrl": "/uploads/1767831472338_f1-night-race.jpg",
-    "ogImage": "/uploads/1767831472338_f1-night-race.jpg",
-    "votingDate": "मतदान दि.- 15/01/2026 रोजी स. ७ ते सायं. ६ पर्यंत",
-    "blueInfoText": "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा",
-    "yellowTitleText": "मतदानाच्या दिवशी सुद्धा \"शिवसेना\" पक्षाचे लोकप्रिय उमेदवार",
-    "yellowFooterText": "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!",
-    "candidates": [
-      {
-        "seat": "अ",
-        "name": "अनिकेत बिसुरे",
-        "serialNumber": "1",
-        "symbolUrl": "/uploads/1767831472338_f1-night-race.jpg",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "ब",
-        "name": "शुभम कुंभार",
-        "serialNumber": "2",
-        "symbolUrl": "/uploads/1767831472338_f1-night-race.jpg",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "क",
-        "name": "राम चव्हाण",
         "serialNumber": "3",
-        "symbolUrl": "/uploads/1767831472338_f1-night-race.jpg",
+        "symbolUrl": "/uploads/1767937618420_WhatsApp_Image_2026-01-08_at_5.47.17_PM_(1).jpeg",
+        "bgColor": "#fff"
+      },
+      {
+        "seat": "ब",
+        "name": "चंद्रकला धर्मराज दहिफळे",
+        "serialNumber": "1",
+        "symbolUrl": "/uploads/1767937618423_WhatsApp_Image_2026-01-08_at_5.47.17_PM.jpeg",
+        "bgColor": "#fff"
+      },
+      {
+        "seat": "क",
+        "name": "वनिता गणेश जाधव",
+        "serialNumber": "2",
+        "symbolUrl": "/uploads/1767937618427_WhatsApp_Image_2026-01-08_at_5.47.18_PM_(1).jpeg",
         "bgColor": "#fff"
       },
       {
         "seat": "ड",
-        "name": "सुमित पवार",
-        "serialNumber": "4",
-        "symbolUrl": "/uploads/1767831472338_f1-night-race.jpg",
-        "bgColor": "#fff"
-      }
-    ]
-  },
-  {
-    "id": "S4WTS",
-    "title": "पुणे महानगर पालिका",
-    "subTitle": "प्रभाग क्रमांक 15",
-    "partyName": "शिवसेना",
-    "mainSymbolUrl": "/uploads/1767855879058_Aniket.jpg",
-    "ogImage": "/uploads/1767855879058_Aniket.jpg",
-    "votingDate": "मतदान दि.- 15/01/2026 रोजी स. ७ ते सायं. ६ पर्यंत",
-    "blueInfoText": "डेमो मतदानासाठी खालील यादीतील निर्णय घेतला आहे कृपया दाबा",
-    "yellowTitleText": "मतदानाच्या दिवशी सुद्धा \"शिवसेना\" पक्षाचे लोकप्रिय उमेदवार",
-    "yellowFooterText": "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!",
-    "candidates": [
-      {
-        "seat": "अ",
-        "name": "अनिकेत बिसुरे",
+        "name": "ञंबक गणपत तुपे",
         "serialNumber": "1",
-        "symbolUrl": "/uploads/1767855879058_Aniket.jpg",
-        "bgColor": "#fff"
-      },
-      {
-        "seat": "जागा 2",
-        "name": "शुभम कुंभार",
-        "serialNumber": "2",
-        "symbolUrl": "/uploads/1767855879058_Aniket.jpg",
+        "symbolUrl": "/uploads/1767937618431_WhatsApp_Image_2026-01-08_at_5.47.18_PM.jpeg",
         "bgColor": "#fff"
       }
     ]

@@ -75,22 +75,22 @@
 .blueInfo {
     background-color: #003399;
     color: white;
-    margin: 8px 15px;
-    padding: 8px 20px;
+    margin: 5px 15px;
+    padding: 6px 15px;
     border-radius: 50px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
 }
 
 .yellowInfo {
     background-color: #fbd700;
     color: #000;
-    margin: 8px 15px;
-    padding: 12px;
+    margin: 5px 15px;
+    padding: 10px;
     border-radius: 8px;
-    font-size: 0.9rem;
-    line-height: 1.6;
+    font-size: 0.85rem;
+    line-height: 1.4;
 }
 
 .yellowTitle {
@@ -100,8 +100,8 @@
 }
 
 .candidateList {
-    margin: 15px 0;
-    padding-left: 25px;
+    margin: 8px 0;
+    padding-left: 20px;
     list-style-type: disc;
 }
 
@@ -111,31 +111,31 @@
 }
 
 .yellowFooter {
-    margin-top: 15px;
-    font-size: 0.95rem;
+    margin-top: 8px;
+    font-size: 0.9rem;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* Date Box */
 .dateBox {
     background-color: #fbd700;
     color: #000;
-    margin: 8px 15px;
-    padding: 8px 15px;
+    margin: 5px 15px;
+    padding: 6px 15px;
     border-radius: 8px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
 }
 
 /* EVM Container (Card) */
 .evmContainer {
     background-color: #e6e6e6;
-    margin: 8px 15px;
-    padding: 12px;
-    border-radius: 25px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 15px 0px;
+    margin: 5px 15px;
+    padding: 8px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px 0px;
 }
 
 /* Candidate Table */
@@ -184,10 +184,16 @@
 .cellSr {
     width: 50px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 500;
+    /* Changed from bold to normal */
     font-size: 1.2rem;
     padding: 5px;
     border-right: 1px solid #000;
+}
+
+.targetSr {
+    font-weight: 900 !important;
+    color: #000;
 }
 
 .cellName {
@@ -203,6 +209,21 @@
     text-align: center;
     padding: 5px;
     border-right: 1px solid #000;
+}
+
+.cellCandidate {
+    width: 90px;
+    /* Increased width from 60px */
+    text-align: center;
+    padding: 0;
+    border-right: 1px solid #000;
+}
+
+.candidateImg {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    display: block;
 }
 
 .cellButton {
@@ -583,6 +604,15 @@
     .cellName {
         font-size: 0.85rem;
         padding-left: 8px;
+    }
+
+    .cellCandidate {
+        width: 75px;
+        /* Increased from 50px */
+    }
+
+    .candidateImg {
+        height: 85px;
     }
 
     .cellSymbol {

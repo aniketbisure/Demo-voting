@@ -1,42 +1,57 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createPoll } from './actions';
-import styles from './page.module.css';
-import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type } from 'lucide-react';
+import { updatePoll, getPoll } from '../../../actions';
+import styles from '../../page.module.css';
+import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
 
 interface CandidateRow {
     name: string;
     seat: string;
     sr: string;
     imagePreview: string | null;
+    existingSymbolUrl?: string;
 }
 
-export default function CreatePollPage() {
-    const [password, setPassword] = useState('');
-    const [isAuthorized, setIsAuthorized] = useState(false);
-    const [error, setError] = useState('');
+export default function EditPollPage() {
+    const params = useParams();
+    const router = useRouter();
+    const id = params.id as string;
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        // You can change this password to whatever you like
-        if (password === 'mastermind800800') {
-            setIsAuthorized(true);
-            setError('');
-        } else {
-            setError('चुकीचा पासवर्ड! कृपया पुन्हा प्रयत्न करा.');
-        }
-    };
-
-    const [candidates, setCandidates] = useState<CandidateRow[]>([
-        { name: '', seat: 'अ', sr: '1', imagePreview: null }
-    ]);
+    const [loading, setLoading] = useState(true);
+    const [poll, setPoll] = useState<any>(null);
+    const [candidates, setCandidates] = useState<CandidateRow[]>([]);
     const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
+
+    useEffect(() => {
+        const loadPoll = async () => {
+            const data = await getPoll(id);
+            if (!data) {
+                router.push('/admin');
+                return;
+            }
+            setPoll(data);
+            setSymbolPreview(data.mainSymbolUrl);
+
+            // Map candidates
+            const mappedCandidates = data.candidates.map((c: any) => ({
+                name: c.name,
+                seat: c.seat,
+                sr: c.serialNumber,
+                imagePreview: c.symbolUrl,
+                existingSymbolUrl: c.symbolUrl
+            }));
+            setCandidates(mappedCandidates);
+            setLoading(false);
+        };
+        loadPoll();
+    }, [id]);
 
     const addCandidate = () => {
         setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null }]);
     };
-
 
     const removeCandidate = (index: number) => {
         if (candidates.length > 1) {
@@ -58,6 +73,8 @@ export default function CreatePollPage() {
             const reader = new FileReader();
             reader.onloadend = () => {
                 updateCandidate(index, 'imagePreview', reader.result as string);
+                // When a new file is selected, we clear the existingSymbolUrl for this row
+                updateCandidate(index, 'existingSymbolUrl', '');
             };
             reader.readAsDataURL(file);
         }
@@ -74,69 +91,48 @@ export default function CreatePollPage() {
         }
     };
 
-    const [today, setToday] = useState('');
+    // Helper to extract date in YYYY-MM-DD from the formatted string
+    const extractDate = (dateStr: string) => {
+        // Look for DD/MM/YYYY
+        const match = dateStr.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+        if (match) {
+            return `${match[3]}-${match[2]}-${match[1]}`;
+        }
+        return new Date().toISOString().split('T')[0];
+    };
 
-    useEffect(() => {
-        setToday(new Date().toISOString().split('T')[0]);
-    }, []);
-
-    if (!isAuthorized) {
-        return (
-            <main className={styles.main}>
-                <div className={styles.container} style={{ maxWidth: '400px', marginTop: '40px' }}>
-                    <div className={styles.header}>
-                        <Vote className={styles.headerIcon} />
-                        <h1 className={styles.title}>प्रवेश प्रतिबंधित</h1>
-                        <p className={styles.subtitle}>पोल तयार करण्यासाठी पासवर्ड टाका</p>
-                    </div>
-                    <form onSubmit={handleLogin} className={styles.form}>
-                        <div className={styles.formGroup}>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className={styles.input}
-                                placeholder="पासवर्ड टाका"
-                                required
-                            />
-                        </div>
-                        {error && <p style={{ color: 'red', fontSize: '14px', marginBottom: '10px' }}>{error}</p>}
-                        <button type="submit" className={styles.submitButton}>
-                            Login
-                        </button>
-                    </form>
-                </div>
-            </main>
-        );
-    }
+    if (loading) return <div className={styles.main}><div className={styles.container}>Loading...</div></div>;
 
     return (
         <main className={styles.main}>
             <div className={styles.container}>
                 <div className={styles.header}>
+                    <Link href="/admin" className={styles.addButton} style={{ position: 'absolute', left: '20px', top: '20px' }}>
+                        <ArrowLeft size={16} /> Back
+                    </Link>
                     <Vote className={styles.headerIcon} />
-                    <h1 className={styles.title}>डेमो मतदान यंत्र तयार करा</h1>
-                    <p className={styles.subtitle}>निवडणूक तपशील भरा आणि नवीन पोल तयार करा</p>
+                    <h1 className={styles.title}>पोल संपादित करा</h1>
+                    <p className={styles.subtitle}>ID: {id} साठी माहिती अद्ययावत करा</p>
                 </div>
 
-                <form action={createPoll} className={styles.form}>
+                <form action={(formData) => updatePoll(id, formData)} className={styles.form}>
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती</h2>
 
                         <div className={styles.formGrid}>
                             <div className={styles.formGroup}>
                                 <label className={styles.label}><Type size={16} /> मुख्य शीर्षक</label>
-                                <input name="title" className={styles.input} placeholder="उदा. महानगरपालिका निवडणूक २०२६" required />
+                                <input name="title" defaultValue={poll.title} className={styles.input} required />
                             </div>
 
                             <div className={styles.formGroup}>
                                 <label className={styles.label}><Type size={16} /> उप-शीर्षक (प्रभाग)</label>
-                                <input name="subTitle" className={styles.input} placeholder="उदा. प्रभाग क्रमांक २०" required />
+                                <input name="subTitle" defaultValue={poll.subTitle} className={styles.input} required />
                             </div>
 
                             <div className={styles.formGroup}>
                                 <label className={styles.label}><Briefcase size={16} /> पक्षाचे नाव</label>
-                                <input name="partyName" className={styles.input} placeholder="उदा. शिवसेना" required />
+                                <input name="partyName" defaultValue={poll.partyName} className={styles.input} required />
                             </div>
 
                             <div className={styles.formGroup}>
@@ -145,22 +141,20 @@ export default function CreatePollPage() {
                                     type="date"
                                     name="votingDate"
                                     className={styles.input}
-                                    min={today}
-                                    defaultValue={today}
+                                    defaultValue={extractDate(poll.votingDate)}
                                     required
                                 />
                             </div>
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.label}><ImageIcon size={16} /> पक्षाचे चिन्ह (Image Upload)</label>
+                            <label className={styles.label}><ImageIcon size={16} /> पक्षाचे चिन्ह (अद्ययावत करण्यासाठी नवीन फाइल निवडा)</label>
                             <input
                                 type="file"
                                 name="mainSymbolFile"
                                 className={styles.input}
                                 accept="image/*"
                                 onChange={handleSymbolChange}
-                                required
                             />
                             {symbolPreview && (
                                 <div className={styles.previewContainer}>
@@ -173,16 +167,32 @@ export default function CreatePollPage() {
                             <label className={styles.label}><ImageIcon size={16} /> उमेदवारांचे फोटो दाखवायचे?</label>
                             <div style={{ display: 'flex', gap: '20px', marginTop: '5px' }}>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem' }}>
-                                    <input type="radio" name="showCandidateImages" value="true" defaultChecked /> हो (Yes)
+                                    <input type="radio" name="showCandidateImages" value="true" defaultChecked={poll.showCandidateImages === true} /> हो (Yes)
                                 </label>
                                 <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem' }}>
-                                    <input type="radio" name="showCandidateImages" value="false" /> नाही (No)
+                                    <input type="radio" name="showCandidateImages" value="false" defaultChecked={poll.showCandidateImages === false} /> नाही (No)
                                 </label>
                             </div>
                         </div>
                     </section>
 
-
+                    <section className={styles.section}>
+                        <h2 className={styles.sectionTitle}>माहिती मजकूर (Info Texts)</h2>
+                        <div className={styles.formGrid}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>निळा बॉक्स मजकूर</label>
+                                <input name="blueInfoText" defaultValue={poll.blueInfoText} className={styles.input} />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>पिवळा बॉक्स शीर्षक</label>
+                                <input name="yellowTitleText" defaultValue={poll.yellowTitleText} className={styles.input} />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>पिवळा बॉक्स तळटीप</label>
+                                <input name="yellowFooterText" defaultValue={poll.yellowFooterText} className={styles.input} />
+                            </div>
+                        </div>
+                    </section>
 
                     <section className={styles.section}>
                         <div className={styles.sectionHeader}>
@@ -195,14 +205,13 @@ export default function CreatePollPage() {
                         <div className={styles.candidateList}>
                             {candidates.map((c, i) => (
                                 <div key={i} className={styles.candidateRow}>
+                                    <input type="hidden" name={`candidateExistingSymbol_${i}`} value={c.existingSymbolUrl || ''} />
                                     <div className={styles.rowField} style={{ flex: 1 }}>
-                                        <label className={styles.label}>अ. क्र. (Sr. No.)</label>
+                                        <label className={styles.label}>अ. क्र.</label>
                                         <input
                                             name={`candidateSr_${i}`}
                                             className={styles.input}
-                                            value={c.sr}
-                                            onChange={(e) => updateCandidate(i, 'sr', e.target.value)}
-                                            placeholder="2"
+                                            defaultValue={c.sr}
                                             required
                                         />
                                     </div>
@@ -211,9 +220,7 @@ export default function CreatePollPage() {
                                         <input
                                             name={`candidateName_${i}`}
                                             className={styles.input}
-                                            value={c.name}
-                                            onChange={(e) => updateCandidate(i, 'name', e.target.value)}
-                                            placeholder="नाव लिहा"
+                                            defaultValue={c.name}
                                             required
                                         />
                                     </div>
@@ -222,9 +229,7 @@ export default function CreatePollPage() {
                                         <input
                                             name={`candidateSeat_${i}`}
                                             className={styles.input}
-                                            value={c.seat}
-                                            onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
-                                            placeholder="उदा. अ, ब, क"
+                                            defaultValue={c.seat}
                                         />
                                     </div>
                                     <div className={styles.rowField} style={{ flex: 2 }}>
@@ -253,17 +258,9 @@ export default function CreatePollPage() {
                     </section>
 
                     <button type="submit" className={styles.submitButton}>
-                        पोल तयार करा <Vote size={20} style={{ marginLeft: '10px' }} />
+                        माहिती अद्ययावत करा <Vote size={20} style={{ marginLeft: '10px' }} />
                     </button>
                 </form>
-
-                <footer className={styles.footer} style={{ border: 'none' }}>
-                    <div style={{ marginTop: '20px' }}>
-                        <a href="/admin" style={{ fontSize: '0.9rem', color: '#666', textDecoration: 'none', opacity: 0.7 }}>
-                            Admin Dashboard
-                        </a>
-                    </div>
-                </footer>
             </div>
         </main>
     );

@@ -23,6 +23,7 @@ interface Poll {
     blueInfoText?: string;
     yellowTitleText?: string;
     yellowFooterText?: string;
+    showCandidateImages?: boolean;
     candidates: Candidate[];
 }
 
@@ -112,7 +113,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 {/* Yellow Info Box */}
                 <div className={styles.yellowInfo}>
                     <div className={styles.yellowTitle}>
-                        मतदानाच्या दिवशी सुद्धा "<strong>{poll.partyName}</strong>" पक्षाचे लोकप्रिय उमेदवार
+                        {poll.yellowTitleText || `मतदानाच्या दिवशी सुद्धा "${poll.partyName}" पक्षाचे लोकप्रिय उमेदवार`}
                     </div>
                     <ul className={styles.candidateList}>
                         {poll.candidates.map((c, i) => (
@@ -122,7 +123,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                         ))}
                     </ul>
                     <div className={styles.yellowFooter}>
-                        यांना त्यांच्या नाव व <strong>{poll.partyName}</strong> निशाणी समोरील बटन दाबून प्रचंड मताने विजयी करा!
+                        {poll.yellowFooterText || "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!"}
                     </div>
                 </div>
 
@@ -154,6 +155,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                     <tr className={styles.tableHeader}>
                                         <th className={styles.headerCell}>अ. क्र.</th>
                                         <th className={styles.headerCell}>उमेदवार नाव</th>
+                                        {poll.showCandidateImages && <th className={styles.headerCell}>फोटो</th>}
                                         <th className={styles.headerCell}>चिन्ह</th>
                                         <th className={styles.headerCell}>बटन</th>
                                     </tr>
@@ -171,12 +173,19 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                 className={`${styles.row} ${isVoted && isMainRow ? styles.votedRow : ''}`}
                                                 style={{ backgroundColor: rowColor }}
                                             >
-                                                <td className={`${styles.cellSr} ${isMainRow ? styles.redBorder : ''}`}>
+                                                <td className={`${styles.cellSr} ${isMainRow ? styles.redBorder : ''} ${isMainRow ? styles.targetSr : ''}`}>
                                                     {rowNum}.
                                                 </td>
                                                 <td className={styles.cellName}>
                                                     {isMainRow ? candidate.name : ''}
                                                 </td>
+                                                {poll.showCandidateImages && (
+                                                    <td className={styles.cellCandidate}>
+                                                        {isMainRow && (
+                                                            <img src={candidate.symbolUrl} alt={candidate.name} className={styles.candidateImg} />
+                                                        )}
+                                                    </td>
+                                                )}
                                                 <td className={styles.cellSymbol}>
                                                     {isMainRow && (
                                                         <>
@@ -217,6 +226,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 <footer className={styles.footer}>
                     <div>2025 © <a href="pollchit.mastermindmedias.com">pollchit.mastermindmedias.com</a></div>
                     <div className={styles.contactEmail}>To create this kind of website, contact:<br />  <a href="tel:9657301344" className={styles.bigContact}>9657301344</a></div>
+                    <div style={{ marginTop: '10px' }}><a href="/admin" style={{ fontSize: '0.8rem', opacity: 0.6 }}>Admin Dashboard</a></div>
                 </footer>
             </div>
 
