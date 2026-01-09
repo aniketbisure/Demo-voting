@@ -13,6 +13,10 @@ export default function AdminPage() {
     const [polls, setPolls] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (password === 'mastermind800800') {
@@ -111,43 +115,68 @@ export default function AdminPage() {
                             </Link>
                         </div>
                     ) : (
-                        polls.map((poll) => (
-                            <div key={poll.id} className={styles.pollCard}>
-                                <div className={styles.pollInfo}>
-                                    <h3 className={styles.pollTitle}>{poll.title}</h3>
-                                    <p className={styles.pollSub}>{poll.subTitle} | ID: {poll.id}</p>
-                                    <div style={{ marginTop: '5px' }}>
-                                        <button
-                                            onClick={() => handleToggleImages(poll.id, !!poll.showCandidateImages)}
-                                            style={{
-                                                fontSize: '11px',
-                                                padding: '2px 8px',
-                                                borderRadius: '10px',
-                                                border: '1px solid #ccc',
-                                                background: poll.showCandidateImages ? '#e6fffa' : '#fff5f5',
-                                                color: poll.showCandidateImages ? '#285e61' : '#822727',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            Photos: {poll.showCandidateImages ? 'ENABLED' : 'DISABLED'}
+                        polls
+                            .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                            .map((poll) => (
+                                <div key={poll.id} className={styles.pollCard}>
+                                    <div className={styles.pollInfo}>
+                                        <h3 className={styles.pollTitle}>{poll.title}</h3>
+                                        <p className={styles.pollSub}>{poll.subTitle} | ID: {poll.id}</p>
+                                        <div style={{ marginTop: '5px' }}>
+                                            <button
+                                                onClick={() => handleToggleImages(poll.id, !!poll.showCandidateImages)}
+                                                style={{
+                                                    fontSize: '11px',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '10px',
+                                                    border: '1px solid #ccc',
+                                                    background: poll.showCandidateImages ? '#e6fffa' : '#fff5f5',
+                                                    color: poll.showCandidateImages ? '#285e61' : '#822727',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                Photos: {poll.showCandidateImages ? 'ENABLED' : 'DISABLED'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className={styles.pollActions}>
+                                        <Link href={`/demo/${poll.id}`} target="_blank" className={styles.actionButton + ' ' + styles.viewBtn}>
+                                            <Eye size={16} /> View
+                                        </Link>
+                                        <Link href={`/admin/edit/${poll.id}`} className={styles.actionButton + ' ' + styles.editBtn}>
+                                            <Edit2 size={16} /> Edit
+                                        </Link>
+                                        <button onClick={() => handleDelete(poll.id)} className={styles.actionButton + ' ' + styles.deleteBtn}>
+                                            <Trash2 size={16} /> Delete
                                         </button>
                                     </div>
                                 </div>
-                                <div className={styles.pollActions}>
-                                    <Link href={`/demo/${poll.id}`} target="_blank" className={styles.actionButton + ' ' + styles.viewBtn}>
-                                        <Eye size={16} /> View
-                                    </Link>
-                                    <Link href={`/admin/edit/${poll.id}`} className={styles.actionButton + ' ' + styles.editBtn}>
-                                        <Edit2 size={16} /> Edit
-                                    </Link>
-                                    <button onClick={() => handleDelete(poll.id)} className={styles.actionButton + ' ' + styles.deleteBtn}>
-                                        <Trash2 size={16} /> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        ))
+                            ))
                     )}
                 </div>
+
+                {/* Pagination Controls */}
+                {polls.length > itemsPerPage && (
+                    <div className={styles.pagination}>
+                        <button
+                            className={styles.pageBtn}
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                        >
+                            Previous
+                        </button>
+                        <span className={styles.pageInfo}>
+                            Page {currentPage} of {Math.ceil(polls.length / itemsPerPage)}
+                        </span>
+                        <button
+                            className={styles.pageBtn}
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(polls.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(polls.length / itemsPerPage)}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
 
                 <div style={{ marginTop: '2rem', textAlign: 'center' }}>
                     <Link href="/" style={{ color: '#3182ce', textDecoration: 'none', fontWeight: '500' }}>

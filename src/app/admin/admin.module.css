@@ -158,3 +158,40 @@
 .submitButton:active {
     transform: scale(0.98);
 }
+
+/* Pagination Controls */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pageBtn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-weight: 500;
+    color: #4a5568;
+    transition: all 0.2s;
+}
+
+.pageBtn:hover:not(:disabled) {
+    background: #edf2f7;
+    border-color: #cbd5e0;
+}
+
+.pageBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f7fafc;
+}
+
+.pageInfo {
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
