@@ -257,13 +257,13 @@ export default function CreatePollPage() {
                     </button>
                 </form>
 
-                <footer className={styles.footer} style={{ border: 'none' }}>
+                {/* <footer className={styles.footer} style={{ border: 'none' }}>
                     <div style={{ marginTop: '20px' }}>
                         <a href="/admin" style={{ fontSize: '0.9rem', color: '#666', textDecoration: 'none', opacity: 0.7 }}>
                             Admin Dashboard
                         </a>
                     </div>
-                </footer>
+                </footer> */}
             </div>
         </main>
     );

@@ -226,7 +226,6 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 <footer className={styles.footer}>
                     <div>2025 © <a href="pollchit.mastermindmedias.com">pollchit.mastermindmedias.com</a></div>
                     <div className={styles.contactEmail}>To create this kind of website, contact:<br />  <a href="tel:9657301344" className={styles.bigContact}>9657301344</a></div>
-                    <div style={{ marginTop: '10px' }}><a href="/admin" style={{ fontSize: '0.8rem', opacity: 0.6 }}>Admin Dashboard</a></div>
                 </footer>
             </div>
 
