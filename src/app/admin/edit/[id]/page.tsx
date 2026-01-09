@@ -13,6 +13,8 @@ interface CandidateRow {
     sr: string;
     imagePreview: string | null;
     existingSymbolUrl?: string;
+    partySymbolPreview: string | null;
+    existingPartySymbolUrl?: string;
 }
 
 export default function EditPollPage() {
@@ -41,7 +43,9 @@ export default function EditPollPage() {
                 seat: c.seat,
                 sr: c.serialNumber,
                 imagePreview: c.symbolUrl,
-                existingSymbolUrl: c.symbolUrl
+                existingSymbolUrl: c.symbolUrl,
+                partySymbolPreview: c.partySymbolUrl,
+                existingPartySymbolUrl: c.partySymbolUrl
             }));
             setCandidates(mappedCandidates);
             setLoading(false);
@@ -50,7 +54,7 @@ export default function EditPollPage() {
     }, [id]);
 
     const addCandidate = () => {
-        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null }]);
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null }]);
     };
 
     const removeCandidate = (index: number) => {
@@ -75,6 +79,18 @@ export default function EditPollPage() {
                 updateCandidate(index, 'imagePreview', reader.result as string);
                 // When a new file is selected, we clear the existingSymbolUrl for this row
                 updateCandidate(index, 'existingSymbolUrl', '');
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleCandidatePartySymbolChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                updateCandidate(index, 'partySymbolPreview', reader.result as string);
+                updateCandidate(index, 'existingPartySymbolUrl', '');
             };
             reader.readAsDataURL(file);
         }
@@ -244,6 +260,22 @@ export default function EditPollPage() {
                                         {c.imagePreview && (
                                             <div className={styles.previewContainer} style={{ width: '40px', height: '40px', marginTop: '5px' }}>
                                                 <img src={c.imagePreview} alt="Preview" className={styles.previewImage} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 2 }}>
+                                        <label className={styles.label}><ImageIcon size={16} /> पक्ष चिन्ह</label>
+                                        <input type="hidden" name={`candidateExistingPartySymbol_${i}`} value={c.existingPartySymbolUrl || ''} />
+                                        <input
+                                            type="file"
+                                            name={`candidatePartySymbol_${i}`}
+                                            className={styles.input}
+                                            accept="image/*"
+                                            onChange={(e) => handleCandidatePartySymbolChange(i, e)}
+                                        />
+                                        {c.partySymbolPreview && (
+                                            <div className={styles.previewContainer} style={{ width: '40px', height: '40px', marginTop: '5px' }}>
+                                                <img src={c.partySymbolPreview} alt="Preview" className={styles.previewImage} />
                                             </div>
                                         )}
                                     </div>
