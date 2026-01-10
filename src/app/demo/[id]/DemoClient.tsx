@@ -264,8 +264,18 @@ export default function DemoClient({ poll }: { poll: Poll }) {
 
                 {/* Footer */}
                 <footer className={styles.footer}>
-                    <div>2025 © <a href="https://mmvoters.in">mmvoters.in</a></div>
-                    <div className={styles.contactEmail}>अशा प्रकारची वेबसाइट तयार करण्यासाठी संपर्क साधा:<br />  <a href={`tel:${poll.contactNumber || '9657301344'}`} className={styles.bigContact}>{poll.contactNumber || '9657301344'}</a></div>
+                    <div className={styles.footerLeft}>2025 © <a href="https://mmvoters.in">mmvoters.in</a></div>
+                    {/* <div className={styles.footerCenter}>अशा प्रकारची वेबसाइट तयार करण्यासाठी संपर्क साधा:</div> */}
+                    <div className={styles.footerRight}>
+                        <a
+                            href={`https://wa.me/91${(poll.contactNumber || '9657301344').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent("I want link")}`}
+                            target="_blank"
+                            style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'inherit', textDecoration: 'none' }}
+                        >
+                            {poll.contactNumber || '9657301344'}
+                            <img src="/wp.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} />
+                        </a>
+                    </div>
                 </footer>
             </div>
 

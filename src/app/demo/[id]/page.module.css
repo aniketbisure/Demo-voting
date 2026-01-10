@@ -280,35 +280,65 @@
 }
 
 /* Footer */
+/* Footer */
 .footer {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    gap: 12px;
-    padding: 25px 20px;
-    font-size: 0.9rem;
+    padding: 15px 20px;
+    font-size: 0.85rem;
     color: #666;
     background: white;
-    border-top: 0.8px solid rgba(0, 0, 255, 0.11);
+    border-top: 1px solid #eee;
+    width: 100%;
+}
+
+.footerLeft {
+    flex: 1;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.footerCenter {
+    flex: 2;
     text-align: center;
+    font-weight: 600;
+    line-height: 1.4;
 }
 
-.contactEmail {
-    line-height: 1.5;
-}
-
-.bigContact {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #0070f3 !important;
-    display: block;
-    margin-top: 5px;
+.footerRight {
+    flex: 1;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 0.8rem; /* little small */
 }
 
 .footer a {
     color: #0066cc;
     text-decoration: none;
+}
+
+@media screen and (max-width: 480px) {
+    .footer {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px 10px;
+    }
+    
+    .footerLeft, .footerCenter, .footerRight {
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .footerCenter {
+        font-size: 1rem;
+    }
 }
 
 /* Red Lamp Indicator */
