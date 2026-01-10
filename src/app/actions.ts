@@ -65,7 +65,7 @@ export async function createPoll(formData: FormData) {
         let votingDate = votingDateRaw;
         if (votingDateRaw) {
             const [year, month, day] = votingDateRaw.split('-');
-            votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७ ते सायं. ६ पर्यंत`;
+            votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
         // Parse candidates from form data
@@ -210,9 +210,9 @@ export async function updatePoll(id: string, formData: FormData) {
         // If it's already in the display format, we might need to handle it.
         // In edit mode, we'll probably pass the raw date if we can.
         let votingDate = votingDateRaw;
-        if (votingDateRaw && votingDateRaw.includes('-')) {
+        if (votingDateRaw && /^\d{4}-\d{2}-\d{2}$/.test(votingDateRaw)) {
             const [year, month, day] = votingDateRaw.split('-');
-            votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७ ते सायं. ६ पर्यंत`;
+            votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
         // Parse candidates from form data
