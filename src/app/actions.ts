@@ -121,7 +121,8 @@ export async function createPoll(formData: FormData) {
             yellowFooterText,
             showCandidateImages,
             contactNumber,
-            candidates
+            candidates,
+            createdAt: new Date().toISOString()
         };
 
         console.log("Saving poll to Redis with ID:", id);

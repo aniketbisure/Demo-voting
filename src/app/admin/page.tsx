@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllPolls, deletePoll, toggleCandidateImages } from '../actions';
 import styles from './admin.module.css';
-import { Eye, Edit2, Trash2, Lock, LayoutDashboard } from 'lucide-react';
+import { Eye, Edit2, Trash2, Lock, LayoutDashboard, Search } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -12,6 +12,7 @@ export default function AdminPage() {
     const [error, setError] = useState('');
     const [polls, setPolls] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +20,7 @@ export default function AdminPage() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (password === 'mastermind800800') {
+        if (password === 'mm1344') {
             setIsAuthorized(true);
             setError('');
             sessionStorage.setItem('admin_auth', 'true');
@@ -44,6 +45,13 @@ export default function AdminPage() {
         setLoading(true);
         try {
             const data = await getAllPolls();
+            // Sort by createdAt descending (newest first)
+            // Use 0 for old polls without createdAt so they appear last
+            data.sort((a: any, b: any) => {
+                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return dateB - dateA;
+            });
             setPolls(data);
         } catch (err) {
             console.error(err);
@@ -63,6 +71,19 @@ export default function AdminPage() {
         await toggleCandidateImages(id, currentState);
         fetchPolls();
     };
+
+    // Filter polls based on search query
+    const filteredPolls = polls.filter(poll => {
+        const query = searchQuery.toLowerCase();
+        const titleMatch = (poll.title || '').toLowerCase().includes(query);
+        const idMatch = (poll.id || '').toLowerCase().includes(query);
+        return titleMatch || idMatch;
+    });
+
+    // Reset page when search changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchQuery]);
 
     if (!isAuthorized) {
         return (
@@ -104,18 +125,33 @@ export default function AdminPage() {
                     <p className={styles.subtitle}>Manage all your voting links here</p>
                 </div>
 
+                {/* Search Bar */}
+                <div className={styles.searchContainer} style={{ marginBottom: '20px', position: 'relative' }}>
+                    <Search className={styles.searchIcon} size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#718096' }} />
+                    <input
+                        type="text"
+                        placeholder="Search by Title or ID (e.g. WU4J0HR)..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.input}
+                        style={{ paddingLeft: '40px' }}
+                    />
+                </div>
+
                 <div className={styles.pollList}>
                     {loading ? (
                         <p className={styles.emptyState}>Loading polls...</p>
-                    ) : polls.length === 0 ? (
+                    ) : filteredPolls.length === 0 ? (
                         <div className={styles.emptyState}>
-                            <p>No polls created yet.</p>
-                            <Link href="/" className={styles.actionButton + ' ' + styles.viewBtn} style={{ display: 'inline-flex', marginTop: '1rem' }}>
-                                Create New Poll
-                            </Link>
+                            <p>No polls found.</p>
+                            {polls.length === 0 && (
+                                <Link href="/" className={styles.actionButton + ' ' + styles.viewBtn} style={{ display: 'inline-flex', marginTop: '1rem' }}>
+                                    Create New Poll
+                                </Link>
+                            )}
                         </div>
                     ) : (
-                        polls
+                        filteredPolls
                             .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                             .map((poll) => (
                                 <div key={poll.id} className={styles.pollCard}>
@@ -156,7 +192,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Pagination Controls */}
-                {polls.length > itemsPerPage && (
+                {filteredPolls.length > itemsPerPage && (
                     <div className={styles.pagination}>
                         <button
                             className={styles.pageBtn}
@@ -166,12 +202,12 @@ export default function AdminPage() {
                             Previous
                         </button>
                         <span className={styles.pageInfo}>
-                            Page {currentPage} of {Math.ceil(polls.length / itemsPerPage)}
+                            Page {currentPage} of {Math.ceil(filteredPolls.length / itemsPerPage)}
                         </span>
                         <button
                             className={styles.pageBtn}
-                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(polls.length / itemsPerPage), p + 1))}
-                            disabled={currentPage === Math.ceil(polls.length / itemsPerPage)}
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredPolls.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(filteredPolls.length / itemsPerPage)}
                         >
                             Next
                         </button>
