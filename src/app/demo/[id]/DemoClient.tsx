@@ -270,10 +270,9 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                         <a
                             href={`https://wa.me/91${(poll.contactNumber || '9657301344').replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent("I want link")}`}
                             target="_blank"
-                            style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'inherit', textDecoration: 'none' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'blue', textDecoration: 'none' }}
                         >
                             {poll.contactNumber || '9657301344'}
-                            <img src="/wp.png" alt="WhatsApp" style={{ width: '20px', height: '20px' }} />
                         </a>
                     </div>
                 </footer>
