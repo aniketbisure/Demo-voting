@@ -33,16 +33,20 @@ export async function GET(
             return new NextResponse('Image not found', { status: 404 });
         }
 
-        // Parse Data URI
+        // Parse Data URI safely
         // Format: data:image/png;base64,iVBORw0KGgo...
-        const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+        const parts = imageBase64.split(';base64,');
 
-        if (!matches || matches.length !== 3) {
+        if (parts.length !== 2) {
+            console.error("Invalid base64 format for poll:", id);
             return new NextResponse('Invalid image data', { status: 500 });
         }
 
-        const mimeType = matches[1];
-        const buffer = Buffer.from(matches[2], 'base64');
+        const mimeType = parts[0].split(':')[1];
+        const base64Data = parts[1];
+        const buffer = Buffer.from(base64Data, 'base64');
+
+        console.log(`Serving OG Image for ${id}: Type=${mimeType}, Size=${buffer.length} bytes`);
 
         return new NextResponse(buffer, {
             headers: {
