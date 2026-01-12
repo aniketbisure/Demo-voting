@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPoll } from './actions';
 import styles from './page.module.css';
 import loaderStyles from './loader.module.css';
+import { compressImage } from '@/utils/imageCompressor';
 import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type } from 'lucide-react';
 
 interface CandidateRow {
@@ -55,18 +56,33 @@ export default function CreatePollPage() {
         setCandidates(newCandidates);
     };
 
-    const handleCandidateImageChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const [compressedFiles, setCompressedFiles] = useState<Record<string, File>>({});
+
+
+    const handleCandidateImageChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Show preview immediately using original file for better UX
             const reader = new FileReader();
             reader.onloadend = () => {
                 updateCandidate(index, 'imagePreview', reader.result as string);
             };
             reader.readAsDataURL(file);
+
+            // Compress in background
+            try {
+                const compressed = await compressImage(file);
+                setCompressedFiles(prev => ({
+                    ...prev,
+                    [`candidateImage_${index}`]: compressed
+                }));
+            } catch (err) {
+                console.error("Compression failed", err);
+            }
         }
     };
 
-    const handleCandidatePartySymbolChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleCandidatePartySymbolChange = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -74,10 +90,20 @@ export default function CreatePollPage() {
                 updateCandidate(index, 'partySymbolPreview', reader.result as string);
             };
             reader.readAsDataURL(file);
+
+            try {
+                const compressed = await compressImage(file);
+                setCompressedFiles(prev => ({
+                    ...prev,
+                    [`candidatePartySymbol_${index}`]: compressed
+                }));
+            } catch (err) {
+                console.error("Compression failed", err);
+            }
         }
     };
 
-    const handleSymbolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSymbolChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
@@ -85,6 +111,16 @@ export default function CreatePollPage() {
                 setSymbolPreview(reader.result as string);
             };
             reader.readAsDataURL(file);
+
+            try {
+                const compressed = await compressImage(file);
+                setCompressedFiles(prev => ({
+                    ...prev,
+                    ['mainSymbolFile']: compressed
+                }));
+            } catch (err) {
+                console.error("Compression failed", err);
+            }
         }
     };
 
@@ -148,6 +184,13 @@ export default function CreatePollPage() {
         setProgress(0);
 
         const formData = new FormData(e.currentTarget);
+
+        // Replace large files with compressed ones
+        Object.entries(compressedFiles).forEach(([key, file]) => {
+            if (formData.has(key)) {
+                formData.set(key, file);
+            }
+        });
 
         try {
             // Start progress immediately
