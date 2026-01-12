@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps) {
         openGraph: {
             title: `${poll.subTitle} - ${poll.partyName} - डेमो मतदान यंत्र`,
             description: poll.title,
-            images: [poll.ogImage || poll.mainSymbolUrl],
+            images: [`https://mmvoters.in/api/og/${id}`],
         },
         icons: {
             icon: poll.mainSymbolUrl,
