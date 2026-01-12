@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Poll from '@/models/Poll';
 import { getRedisClient } from '@/lib/redis';
+import sharp from 'sharp';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,13 +49,24 @@ export async function GET(
         const base64Data = parts[1];
         const buffer = Buffer.from(base64Data, 'base64');
 
-        console.log(`Serving OG Image for ${id}: Type=${mimeType}, Size=${buffer.length} bytes`);
+        console.log(`Original Image Size: ${buffer.length} bytes`);
 
-        return new NextResponse(buffer, {
+        // Resize and compress
+        const optimizedBuffer = await sharp(buffer)
+            .resize(600, 600, {
+                fit: 'inside', // Maintain aspect ratio, max 600x600
+                withoutEnlargement: true
+            })
+            .toFormat('jpeg', { quality: 80 })
+            .toBuffer();
+
+        console.log(`Optimized Image Size: ${optimizedBuffer.length} bytes`);
+
+        return new NextResponse(optimizedBuffer, {
             headers: {
-                'Content-Type': mimeType,
-                'Content-Length': buffer.length.toString(),
-                'Content-Disposition': `inline; filename="poll-image-${id}.${mimeType.split('/')[1]}"`,
+                'Content-Type': 'image/jpeg',
+                'Content-Length': optimizedBuffer.length.toString(),
+                'Content-Disposition': `inline; filename="poll-image-${id}.jpg"`,
                 'Cache-Control': 'public, max-age=31536000, immutable',
             },
         });
