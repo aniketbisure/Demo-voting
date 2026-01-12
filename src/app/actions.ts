@@ -1,50 +1,29 @@
 'use server'
 
-import { put } from '@vercel/blob';
-import { getRedisClient } from '@/lib/redis';
 import { redirect } from 'next/navigation';
-import fs from 'fs';
-import path from 'path';
+import connectDB from '@/lib/mongodb';
+import Poll, { IPoll } from '@/models/Poll';
+import { getRedisClient } from '@/lib/redis';
 
-async function uploadImage(file: File): Promise<string> {
+// Helper to convert File to Base64 string
+async function fileToBase64(file: File): Promise<string> {
     if (!file || !file.name || file.size === 0) return '';
-
-    // Check if Vercel Blob token exists
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-        try {
-            const blob = await put(file.name, file, {
-                access: 'public',
-                addRandomSuffix: true,
-            });
-            return blob.url;
-        } catch (err) {
-            console.error("Vercel Blob upload failed, falling back to local:", err);
-        }
-    }
-
-    // Fallback to local storage in public/uploads
     try {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        const filename = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-        const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
-        const filePath = path.join(uploadDir, filename);
-        fs.writeFileSync(filePath, buffer);
-        return `/uploads/${filename}`;
-    } catch (err) {
-        console.error("Local upload failed:", err);
+        const base64 = buffer.toString('base64');
+        return `data:${file.type || 'image/png'};base64,${base64}`;
+    } catch (error) {
+        console.error("Error converting file to base64:", error);
         return '';
     }
 }
 
 export async function createPoll(formData: FormData) {
     try {
-        console.log("Starting createPoll...");
+        await connectDB();
+
+        console.log("Starting createPoll with MongoDB...");
         const title = formData.get('title') as string;
         const subTitle = formData.get('subTitle') as string;
         const partyName = formData.get('partyName') as string;
@@ -55,51 +34,40 @@ export async function createPoll(formData: FormData) {
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
 
-        console.log("Form data parsed. Uploading main symbol...");
-        // Handle File Upload
+        // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
-        const mainSymbolUrl = await uploadImage(symbolFile);
-        console.log("Main symbol URL:", mainSymbolUrl);
+        const mainSymbolUrl = await fileToBase64(symbolFile);
 
-        // Format Date: YYYY-MM-DD -> मतदान दि.- DD/MM/YYYY
+        // Format Date
         let votingDate = votingDateRaw;
         if (votingDateRaw) {
             const [year, month, day] = votingDateRaw.split('-');
             votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
-        // Parse candidates from form data
+        // Parse candidates
         const candidates = [];
         let i = 0;
         while (formData.has(`candidateName_${i}`)) {
             const name = formData.get(`candidateName_${i}`) as string;
             const seat = formData.get(`candidateSeat_${i}`) as string;
             const serialNumber = formData.get(`candidateSr_${i}`) as string;
-            const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
 
-            console.log(`Processing candidate ${i}: ${name}`);
-            let candidateSymbolUrl = await uploadImage(candidateImageFile);
-            if (!candidateSymbolUrl) {
-                candidateSymbolUrl = mainSymbolUrl;
-            }
+            const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
+            let candidateSymbolUrl = await fileToBase64(candidateImageFile);
+            if (!candidateSymbolUrl) candidateSymbolUrl = mainSymbolUrl;
 
             const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
-            let partySymbolUrl = await uploadImage(candidatePartySymbolFile);
-
-            // If no specific party symbol, fallback to main party symbol?
-            // User requested "add its party logo", so if not provided, maybe main symbol is good default OR blank.
-            // Let's default to mainSymbolUrl if not provided, consistent with current behavior of "symbol" column.
-            if (!partySymbolUrl) {
-                partySymbolUrl = mainSymbolUrl;
-            }
+            let partySymbolUrl = await fileToBase64(candidatePartySymbolFile);
+            if (!partySymbolUrl) partySymbolUrl = mainSymbolUrl;
 
             if (name) {
                 candidates.push({
                     seat: seat || (i + 1).toString(),
                     name,
                     serialNumber: serialNumber || (i + 1).toString(),
-                    symbolUrl: candidateSymbolUrl, // This is the candidate PHOTO
-                    partySymbolUrl: partySymbolUrl, // This is the new candidate PARTY SYMBOL
+                    symbolUrl: candidateSymbolUrl,
+                    partySymbolUrl: partySymbolUrl,
                     bgColor: '#fff'
                 });
             }
@@ -108,7 +76,7 @@ export async function createPoll(formData: FormData) {
 
         const id = Math.random().toString(36).substring(7).toUpperCase();
 
-        const newPoll = {
+        const newPoll = new Poll({
             id,
             title,
             subTitle,
@@ -121,19 +89,15 @@ export async function createPoll(formData: FormData) {
             yellowFooterText,
             showCandidateImages,
             contactNumber,
-            candidates,
-            createdAt: new Date().toISOString()
-        };
+            candidates
+        });
 
-        console.log("Saving poll to Redis with ID:", id);
-        // Save to Redis
-        const redis = await getRedisClient();
-        await redis.set(`poll:${id}`, JSON.stringify(newPoll));
-        console.log("Poll saved. Redirecting...");
+        await newPoll.save();
+        console.log("Poll saved to MongoDB with ID:", id);
 
         redirect(`/demo/${id}`);
     } catch (error: any) {
-        if (error.message === 'NEXT_REDIRECT') throw error; // Re-throw Next.js redirect errors
+        if (error.message === 'NEXT_REDIRECT') throw error;
         console.error("CRITICAL ERROR in createPoll:", error);
         throw error;
     }
@@ -141,18 +105,36 @@ export async function createPoll(formData: FormData) {
 
 export async function getAllPolls() {
     try {
+        await connectDB();
+        // 1. Fetch from MongoDB
+        const mongoPolls = await Poll.find({}).sort({ createdAt: -1 }).lean();
+        const mongoPollsPlain = JSON.parse(JSON.stringify(mongoPolls));
+
+        // 2. Fetch from Legacy (Redis/JSON) for backward compatibility
         const redis = await getRedisClient();
         const keys = await redis.keys('poll:*');
-        const polls = [];
+        const legacyPolls = [];
 
         for (const key of keys) {
+            const id = key.replace('poll:', '');
+            // Skip if this poll ID is already in MongoDB (migrated)
+            if (mongoPollsPlain.some((p: any) => p.id === id)) continue;
+
             const data = await redis.get(key);
             if (data) {
-                polls.push(JSON.parse(data));
+                legacyPolls.push(JSON.parse(data));
             }
         }
 
-        return polls;
+        // 3. Merge and Sort
+        const allPolls = [...mongoPollsPlain, ...legacyPolls];
+        allPolls.sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
+        });
+
+        return allPolls;
     } catch (error) {
         console.error("Error in getAllPolls:", error);
         return [];
@@ -161,6 +143,14 @@ export async function getAllPolls() {
 
 export async function getPoll(id: string) {
     try {
+        await connectDB();
+        // 1. Try MongoDB
+        const poll = await Poll.findOne({ id }).lean();
+        if (poll) {
+            return JSON.parse(JSON.stringify(poll));
+        }
+
+        // 2. Failover to Legacy (Redis/JSON)
         const redis = await getRedisClient();
         const data = await redis.get(`poll:${id}`);
         return data ? JSON.parse(data) : null;
@@ -172,8 +162,15 @@ export async function getPoll(id: string) {
 
 export async function deletePoll(id: string) {
     try {
+        await connectDB();
+
+        // Try delete from MongoDB
+        const result = await Poll.deleteOne({ id });
+
+        // Also try delete from Legacy (cleanup even if not migrated, or if it exists in both)
         const redis = await getRedisClient();
         await redis.del(`poll:${id}`);
+
     } catch (error) {
         console.error("Error in deletePoll:", error);
     }
@@ -181,6 +178,26 @@ export async function deletePoll(id: string) {
 
 export async function updatePoll(id: string, formData: FormData) {
     try {
+        await connectDB();
+
+        let existingPoll = await Poll.findOne({ id });
+        let isLegacy = false;
+
+        if (!existingPoll) {
+            // Check legacy storage
+            const redis = await getRedisClient();
+            const data = await redis.get(`poll:${id}`);
+            if (data) {
+                // Keep the raw object first, we will transform it to Mongoose doc or object
+                // Since we want to SAVE to Mongo, we should create a new Poll instance with this data
+                const legacyData = JSON.parse(data);
+                existingPoll = new Poll(legacyData);
+                isLegacy = true;
+            }
+        }
+
+        if (!existingPoll) throw new Error("Poll not found");
+
         const title = formData.get('title') as string;
         const subTitle = formData.get('subTitle') as string;
         const partyName = formData.get('partyName') as string;
@@ -191,53 +208,54 @@ export async function updatePoll(id: string, formData: FormData) {
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
 
-        // Existing data
-        const redis = await getRedisClient();
-        const existingData = await redis.get(`poll:${id}`);
-        const existingPoll = existingData ? JSON.parse(existingData) : null;
-
-        if (!existingPoll) throw new Error("Poll not found");
-
-        // Handle File Upload
+        // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
         let mainSymbolUrl = existingPoll.mainSymbolUrl;
 
-        const newSymbolUrl = await uploadImage(symbolFile);
-        if (newSymbolUrl) {
-            mainSymbolUrl = newSymbolUrl;
+        const newSymbolBase64 = await fileToBase64(symbolFile);
+        if (newSymbolBase64) {
+            mainSymbolUrl = newSymbolBase64;
         }
 
-        // Format Date: YYYY-MM-DD -> मतदान दि.- DD/MM/YYYY
-        // If it's already in the display format, we might need to handle it.
-        // In edit mode, we'll probably pass the raw date if we can.
+        // Format Date
         let votingDate = votingDateRaw;
+        // Simple check if it's in YYYY-MM-DD format to convert
         if (votingDateRaw && /^\d{4}-\d{2}-\d{2}$/.test(votingDateRaw)) {
             const [year, month, day] = votingDateRaw.split('-');
             votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
-        // Parse candidates from form data
+        // Parse candidates
         const candidates = [];
         let i = 0;
+
+        // We need to match with existing candidates to preserve images if not updated?
+        // Or re-construct list. Form sends everything usually.
+        // If we implement partial update logic it's complex.
+        // Typically the edit form sends back existing URLs if they weren't changed.
+        // Let's see if the form sends 'candidateExistingSymbol'.
+
         while (formData.has(`candidateName_${i}`)) {
             const name = formData.get(`candidateName_${i}`) as string;
             const seat = formData.get(`candidateSeat_${i}`) as string;
             const serialNumber = formData.get(`candidateSr_${i}`) as string;
+
             const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
             const existingSymbolUrl = formData.get(`candidateExistingSymbol_${i}`) as string;
+
             const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
             const existingPartySymbolUrl = formData.get(`candidateExistingPartySymbol_${i}`) as string;
 
             let candidateSymbolUrl = existingSymbolUrl || mainSymbolUrl;
-            const newCandImage = await uploadImage(candidateImageFile);
-            if (newCandImage) {
-                candidateSymbolUrl = newCandImage;
+            const newCandBase64 = await fileToBase64(candidateImageFile);
+            if (newCandBase64) {
+                candidateSymbolUrl = newCandBase64;
             }
 
             let partySymbolUrl = existingPartySymbolUrl || mainSymbolUrl;
-            const newPartySymbol = await uploadImage(candidatePartySymbolFile);
-            if (newPartySymbol) {
-                partySymbolUrl = newPartySymbol;
+            const newPartyBase64 = await fileToBase64(candidatePartySymbolFile);
+            if (newPartyBase64) {
+                partySymbolUrl = newPartyBase64;
             }
 
             if (name) {
@@ -253,23 +271,32 @@ export async function updatePoll(id: string, formData: FormData) {
             i++;
         }
 
-        const updatedPoll = {
-            ...existingPoll,
-            title,
-            subTitle,
-            partyName,
-            mainSymbolUrl,
-            ogImage: mainSymbolUrl,
-            votingDate,
-            blueInfoText,
-            yellowTitleText,
-            yellowFooterText,
-            showCandidateImages,
-            contactNumber,
-            candidates
-        };
+        // Update fields
+        existingPoll.title = title;
+        existingPoll.subTitle = subTitle;
+        existingPoll.partyName = partyName;
+        existingPoll.mainSymbolUrl = mainSymbolUrl;
+        existingPoll.ogImage = mainSymbolUrl;
+        existingPoll.votingDate = votingDate;
+        existingPoll.blueInfoText = blueInfoText;
+        existingPoll.yellowTitleText = yellowTitleText;
+        existingPoll.yellowFooterText = yellowFooterText;
+        existingPoll.showCandidateImages = showCandidateImages;
+        existingPoll.contactNumber = contactNumber;
+        existingPoll.candidates = candidates;
 
-        await redis.set(`poll:${id}`, JSON.stringify(updatedPoll));
+        // If it was legacy, this is a new document created via `new Poll(...)`.
+        // If it was existing Mongo doc, it's that doc.
+        // `save()` works for both.
+        await existingPoll.save();
+
+        if (isLegacy) {
+            // Remove from old storage to complete migration
+            const redis = await getRedisClient();
+            await redis.del(`poll:${id}`);
+            console.log(`Migrated poll ${id} from Legacy to MongoDB`);
+        }
+
         redirect(`/demo/${id}`);
     } catch (error: any) {
         if (error.message === 'NEXT_REDIRECT') throw error;
@@ -277,17 +304,29 @@ export async function updatePoll(id: string, formData: FormData) {
         throw error;
     }
 }
+
 export async function toggleCandidateImages(id: string, currentState: boolean) {
     try {
+        await connectDB();
+
+        // Try Mongo first
+        const poll = await Poll.findOne({ id });
+        if (poll) {
+            poll.showCandidateImages = !currentState;
+            await poll.save();
+            return poll.showCandidateImages;
+        }
+
+        // Fallback to legacy
         const redis = await getRedisClient();
         const data = await redis.get(`poll:${id}`);
-        if (!data) return;
+        if (data) {
+            const legacyPoll = JSON.parse(data);
+            legacyPoll.showCandidateImages = !currentState;
+            await redis.set(`poll:${id}`, JSON.stringify(legacyPoll));
+            return legacyPoll.showCandidateImages;
+        }
 
-        const poll = JSON.parse(data);
-        poll.showCandidateImages = !currentState;
-
-        await redis.set(`poll:${id}`, JSON.stringify(poll));
-        return poll.showCandidateImages;
     } catch (error) {
         console.error("Error toggling images:", error);
     }

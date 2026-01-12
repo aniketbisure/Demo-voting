@@ -1,9 +1,9 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { getRedisClient } from '@/lib/redis';
+import { getPoll } from '../../actions';
 import DemoClient from './DemoClient';
 
-// Force dynamic so it reads from Redis on every request
+// Force dynamic so it reads from DB on every request
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
@@ -15,9 +15,7 @@ interface PageProps {
 // Metadata for OG tags
 export async function generateMetadata({ params }: PageProps) {
     const { id } = await params;
-    const redis = await getRedisClient();
-    const data = await redis.get(`poll:${id}`);
-    const poll = data ? JSON.parse(data) : null;
+    const poll = await getPoll(id);
 
     if (!poll) return {};
 
@@ -39,9 +37,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function DemoPage({ params }: PageProps) {
     const { id } = await params;
-    const redis = await getRedisClient();
-    const data = await redis.get(`poll:${id}`);
-    const poll = data ? JSON.parse(data) : null;
+    const poll = await getPoll(id);
 
     if (!poll) {
         return notFound();
@@ -49,3 +45,4 @@ export default async function DemoPage({ params }: PageProps) {
 
     return <DemoClient poll={poll} />;
 }
+
