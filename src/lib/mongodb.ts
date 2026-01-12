@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://corelineitsolutions_db_user:LeKEyGpvdEbUcb0U@pollchit.knwrevv.mongodb.net/voting-app';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
@@ -31,7 +31,7 @@ async function connectDB() {
             bufferCommands: false,
         };
 
-        cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+        cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
             console.log('MongoDB Connected Successfully');
             return mongoose;
         });
