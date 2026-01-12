@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPoll } from './actions';
 import styles from './page.module.css';
+import loaderStyles from './loader.module.css';
 import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type } from 'lucide-react';
 
 interface CandidateRow {
@@ -126,8 +127,71 @@ export default function CreatePollPage() {
         );
     }
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [progress, setProgress] = useState(0);
+
+    // Simulate progress
+    useEffect(() => {
+        if (isSubmitting && progress < 90) {
+            const timer = setTimeout(() => {
+                const diff = Math.random() * 10;
+                setProgress(Math.min(progress + diff, 90));
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [isSubmitting, progress]);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setProgress(0);
+
+        const formData = new FormData(e.currentTarget);
+
+        try {
+            // Start progress immediately
+            setProgress(10);
+            await createPoll(formData);
+        } catch (err) {
+            console.error(err);
+            // If it's a redirect, the page will change, so we don't strictly need to do anything.
+            // But if it's a real error, we should show it.
+        }
+    };
+
     return (
         <main className={styles.main}>
+            {isSubmitting && (
+                <div className={loaderStyles.loaderOverlay}>
+                    <div className={loaderStyles.loaderContainer}>
+                        <h2 className={loaderStyles.loaderTitle}>कृपया प्रतीक्षा करा...</h2>
+                        <div className={loaderStyles.progressCircle}>
+                            <svg viewBox="0 0 36 36" className={loaderStyles.circularChart}>
+                                <path className={loaderStyles.circleBg}
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <path className={loaderStyles.circle}
+                                    strokeDasharray={`${progress}, 100`}
+                                    stroke="#FF9933"
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                            </svg>
+                            <div className={loaderStyles.percentage}>{Math.round(progress)}%</div>
+                        </div>
+                        <p className={loaderStyles.loaderSubtitle}>तुमचा पोल तयार होत आहे...</p>
+                        <p className={loaderStyles.statusText}>
+                            {progress < 30 && "फोटो अपलोड होत आहेत..."}
+                            {progress >= 30 && progress < 70 && "सर्व्हरवर माहिती जतन होत आहे..."}
+                            {progress >= 70 && "लिंक तयार केली जात आहे..."}
+                        </p>
+                    </div>
+                </div>
+            )}
+
             <div className={styles.container}>
                 <div className={styles.header}>
                     <Vote className={styles.headerIcon} />
@@ -135,7 +199,7 @@ export default function CreatePollPage() {
                     <p className={styles.subtitle}>निवडणूक तपशील भरा आणि नवीन पोल तयार करा</p>
                 </div>
 
-                <form action={createPoll} className={styles.form}>
+                <form onSubmit={handleSubmit} className={styles.form}>
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती</h2>
 
@@ -288,8 +352,8 @@ export default function CreatePollPage() {
                         </div>
                     </section>
 
-                    <button type="submit" className={styles.submitButton}>
-                        पोल तयार करा <Vote size={20} style={{ marginLeft: '10px' }} />
+                    <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+                        {isSubmitting ? 'प्रक्रिया सुरू आहे...' : 'पोल तयार करा'} <Vote size={20} style={{ marginLeft: '10px' }} />
                     </button>
                 </form>
 
