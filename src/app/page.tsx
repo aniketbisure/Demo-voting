@@ -196,10 +196,11 @@ export default function CreatePollPage() {
             // Start progress immediately
             setProgress(10);
             await createPoll(formData);
-        } catch (err) {
+        } catch (err: any) {
+            if (err.message === 'NEXT_REDIRECT') {
+                return; // Redirecting is normal behavior
+            }
             console.error(err);
-            // If it's a redirect, the page will change, so we don't strictly need to do anything.
-            // But if it's a real error, we should show it.
         }
     };
 
