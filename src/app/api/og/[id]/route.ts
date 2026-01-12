@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import Poll from '@/models/Poll';
 import { getRedisClient } from '@/lib/redis';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -51,6 +53,8 @@ export async function GET(
         return new NextResponse(buffer, {
             headers: {
                 'Content-Type': mimeType,
+                'Content-Length': buffer.length.toString(),
+                'Content-Disposition': `inline; filename="poll-image-${id}.${mimeType.split('/')[1]}"`,
                 'Cache-Control': 'public, max-age=31536000, immutable',
             },
         });
