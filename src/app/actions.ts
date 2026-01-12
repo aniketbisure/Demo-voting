@@ -45,34 +45,43 @@ export async function createPoll(formData: FormData) {
             votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
-        // Parse candidates
-        const candidates = [];
+        // Parse candidates with Parallel Image Processing
+        const candidatePromises = [];
         let i = 0;
+
         while (formData.has(`candidateName_${i}`)) {
-            const name = formData.get(`candidateName_${i}`) as string;
-            const seat = formData.get(`candidateSeat_${i}`) as string;
-            const serialNumber = formData.get(`candidateSr_${i}`) as string;
+            const index = i;
+            candidatePromises.push((async () => {
+                const name = formData.get(`candidateName_${index}`) as string;
+                const seat = formData.get(`candidateSeat_${index}`) as string;
+                const serialNumber = formData.get(`candidateSr_${index}`) as string;
 
-            const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
-            let candidateSymbolUrl = await fileToBase64(candidateImageFile);
-            if (!candidateSymbolUrl) candidateSymbolUrl = mainSymbolUrl;
+                const candidateImageFile = formData.get(`candidateImage_${index}`) as File;
+                // For create, we don't have existing URLs, but follow same logic.
+                let candidateSymbolUrl = await fileToBase64(candidateImageFile);
+                if (!candidateSymbolUrl) candidateSymbolUrl = mainSymbolUrl;
 
-            const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
-            let partySymbolUrl = await fileToBase64(candidatePartySymbolFile);
-            if (!partySymbolUrl) partySymbolUrl = mainSymbolUrl;
+                const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${index}`) as File;
+                let partySymbolUrl = await fileToBase64(candidatePartySymbolFile);
+                if (!partySymbolUrl) partySymbolUrl = mainSymbolUrl;
 
-            if (name) {
-                candidates.push({
-                    seat: seat || (i + 1).toString(),
-                    name,
-                    serialNumber: serialNumber || (i + 1).toString(),
-                    symbolUrl: candidateSymbolUrl,
-                    partySymbolUrl: partySymbolUrl,
-                    bgColor: '#fff'
-                });
-            }
+                if (name) {
+                    return {
+                        seat: seat || (index + 1).toString(),
+                        name,
+                        serialNumber: serialNumber || (index + 1).toString(),
+                        symbolUrl: candidateSymbolUrl,
+                        partySymbolUrl: partySymbolUrl,
+                        bgColor: '#fff'
+                    };
+                }
+                return null;
+            })());
             i++;
         }
+
+        const resolvedCandidates = await Promise.all(candidatePromises);
+        const candidates = resolvedCandidates.filter((c) => c !== null);
 
         const id = Math.random().toString(36).substring(7).toUpperCase();
 
@@ -225,51 +234,58 @@ export async function updatePoll(id: string, formData: FormData) {
             votingDate = `मतदान दि.- ${day}/${month}/${year} रोजी स. ७. ३० ते सायं. ५. ३० पर्यंत`;
         }
 
-        // Parse candidates
-        const candidates = [];
+        // Parse candidates with Parallel Image Processing
+        const candidatePromises = [];
         let i = 0;
 
-        // We need to match with existing candidates to preserve images if not updated?
-        // Or re-construct list. Form sends everything usually.
-        // If we implement partial update logic it's complex.
-        // Typically the edit form sends back existing URLs if they weren't changed.
-        // Let's see if the form sends 'candidateExistingSymbol'.
-
         while (formData.has(`candidateName_${i}`)) {
-            const name = formData.get(`candidateName_${i}`) as string;
-            const seat = formData.get(`candidateSeat_${i}`) as string;
-            const serialNumber = formData.get(`candidateSr_${i}`) as string;
+            const index = i;
+            // Create a closure to capture 'index'
+            candidatePromises.push((async () => {
+                const name = formData.get(`candidateName_${index}`) as string;
+                const seat = formData.get(`candidateSeat_${index}`) as string;
+                const serialNumber = formData.get(`candidateSr_${index}`) as string;
 
-            const candidateImageFile = formData.get(`candidateImage_${i}`) as File;
-            const existingSymbolUrl = formData.get(`candidateExistingSymbol_${i}`) as string;
+                const candidateImageFile = formData.get(`candidateImage_${index}`) as File;
+                const existingSymbolUrl = formData.get(`candidateExistingSymbol_${index}`) as string;
 
-            const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${i}`) as File;
-            const existingPartySymbolUrl = formData.get(`candidateExistingPartySymbol_${i}`) as string;
+                const candidatePartySymbolFile = formData.get(`candidatePartySymbol_${index}`) as File;
+                const existingPartySymbolUrl = formData.get(`candidateExistingPartySymbol_${index}`) as string;
 
-            let candidateSymbolUrl = existingSymbolUrl || mainSymbolUrl;
-            const newCandBase64 = await fileToBase64(candidateImageFile);
-            if (newCandBase64) {
-                candidateSymbolUrl = newCandBase64;
-            }
+                // 1. Candidate Symbol
+                // Try new upload -> then existing URL -> then fallback to Main Symbol
+                let candidateSymbolUrl = existingSymbolUrl;
+                const newCandBase64 = await fileToBase64(candidateImageFile);
+                if (newCandBase64) {
+                    candidateSymbolUrl = newCandBase64;
+                }
+                if (!candidateSymbolUrl) candidateSymbolUrl = mainSymbolUrl;
 
-            let partySymbolUrl = existingPartySymbolUrl || mainSymbolUrl;
-            const newPartyBase64 = await fileToBase64(candidatePartySymbolFile);
-            if (newPartyBase64) {
-                partySymbolUrl = newPartyBase64;
-            }
+                // 2. Party Symbol
+                let partySymbolUrl = existingPartySymbolUrl;
+                const newPartyBase64 = await fileToBase64(candidatePartySymbolFile);
+                if (newPartyBase64) {
+                    partySymbolUrl = newPartyBase64;
+                }
+                if (!partySymbolUrl) partySymbolUrl = mainSymbolUrl;
 
-            if (name) {
-                candidates.push({
-                    seat: seat || (i + 1).toString(),
-                    name,
-                    serialNumber: serialNumber || (i + 1).toString(),
-                    symbolUrl: candidateSymbolUrl,
-                    partySymbolUrl: partySymbolUrl,
-                    bgColor: '#fff'
-                });
-            }
+                if (name) {
+                    return {
+                        seat: seat || (index + 1).toString(),
+                        name,
+                        serialNumber: serialNumber || (index + 1).toString(),
+                        symbolUrl: candidateSymbolUrl,
+                        partySymbolUrl: partySymbolUrl,
+                        bgColor: '#fff'
+                    };
+                }
+                return null;
+            })());
             i++;
         }
+
+        const resolvedCandidates = await Promise.all(candidatePromises);
+        const candidates = resolvedCandidates.filter((c) => c !== null);
 
         // Update fields
         existingPoll.title = title;

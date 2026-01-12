@@ -89,6 +89,8 @@ export default function CreatePollPage() {
     };
 
     const [today, setToday] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
         setToday(new Date().toISOString().split('T')[0]);
@@ -96,6 +98,17 @@ export default function CreatePollPage() {
             setIsAuthorized(true);
         }
     }, []);
+
+    // Simulate progress
+    useEffect(() => {
+        if (isSubmitting && progress < 90) {
+            const timer = setTimeout(() => {
+                const diff = Math.random() * 10;
+                setProgress(Math.min(progress + diff, 90));
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [isSubmitting, progress]);
 
     if (!isAuthorized) {
         return (
@@ -127,19 +140,7 @@ export default function CreatePollPage() {
         );
     }
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [progress, setProgress] = useState(0);
 
-    // Simulate progress
-    useEffect(() => {
-        if (isSubmitting && progress < 90) {
-            const timer = setTimeout(() => {
-                const diff = Math.random() * 10;
-                setProgress(Math.min(progress + diff, 90));
-            }, 500);
-            return () => clearTimeout(timer);
-        }
-    }, [isSubmitting, progress]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
