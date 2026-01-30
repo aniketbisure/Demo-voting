@@ -119,7 +119,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        <img src="/wp.png" alt="WhatsApp" className={styles.whatsappIcon} style={{ width: '120px', height: 'auto' }} />
+                        <img src="/wp.png" alt="WhatsApp" className={styles.whatsappIcon} />
                     </a>
                 </div>
 

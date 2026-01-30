@@ -66,8 +66,8 @@
 }
 
 .whatsappIcon {
-    width: 20px;
-    height: 20px;
+    width: 120px;
+    height: auto;
     object-fit: contain;
 }
 
@@ -624,12 +624,23 @@
         font-size: 0.9rem;
     }
 
+    .titleRow {
+        padding: 5px 5px !important;
+    }
+
     .demoTitle {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        /* Reduced from 1rem */
+        line-height: 1.2;
     }
 
     .wardNumber {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
+        max-width: 40%;
+    }
+
+    .whatsappIcon {
+        width: 90px;
     }
 
     .blueInfo {
