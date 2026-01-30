@@ -62,7 +62,7 @@ export async function GET(
 
         console.log(`Optimized Image Size: ${optimizedBuffer.length} bytes`);
 
-        return new NextResponse(optimizedBuffer, {
+        return new NextResponse(optimizedBuffer as any, {
             headers: {
                 'Content-Type': 'image/jpeg',
                 'Content-Length': optimizedBuffer.length.toString(),
