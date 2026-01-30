@@ -7,6 +7,7 @@ export interface ICandidate {
     symbolUrl: string;
     partySymbolUrl: string;
     bgColor?: string;
+    headerMessage?: string;
     votes?: number;
 }
 
@@ -23,6 +24,7 @@ export interface IPoll extends Document {
     yellowFooterText?: string;
     showCandidateImages: boolean;
     contactNumber?: string;
+    customMessage?: string;
     candidates: ICandidate[];
     createdAt: Date;
 }
@@ -34,6 +36,7 @@ const CandidateSchema = new Schema<ICandidate>({
     symbolUrl: { type: String, required: true },
     partySymbolUrl: { type: String, required: true },
     bgColor: { type: String, default: '#fff' },
+    headerMessage: { type: String },
     votes: { type: Number, default: 0 }
 });
 
@@ -50,6 +53,7 @@ const PollSchema = new Schema<IPoll>({
     yellowFooterText: { type: String },
     showCandidateImages: { type: Boolean, default: true },
     contactNumber: { type: String },
+    customMessage: { type: String },
     candidates: [CandidateSchema],
     createdAt: { type: Date, default: Date.now }
 });

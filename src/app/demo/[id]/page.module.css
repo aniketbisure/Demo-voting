@@ -148,6 +148,20 @@
     border: 1px solid #000;
 }
 
+.customMessageRow {
+    background-color: #ffffff;
+    border-bottom: 1px solid #000;
+}
+
+.customMessageCell {
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #d32f2f;
+    /* Using the red color seen in demoTitle */
+}
+
 .tableHeader {
     background-color: #e6e6e6;
 }
@@ -314,7 +328,8 @@
     align-items: center;
     justify-content: flex-end;
     gap: 5px;
-    font-size: 0.8rem; /* little small */
+    font-size: 0.8rem;
+    /* little small */
 }
 
 .footer a {
@@ -329,13 +344,15 @@
         text-align: center;
         padding: 20px 10px;
     }
-    
-    .footerLeft, .footerCenter, .footerRight {
+
+    .footerLeft,
+    .footerCenter,
+    .footerRight {
         text-align: center;
         width: 100%;
         justify-content: center;
     }
-    
+
     .footerCenter {
         font-size: 1rem;
     }

@@ -15,6 +15,7 @@ interface CandidateRow {
     existingSymbolUrl?: string;
     partySymbolPreview: string | null;
     existingPartySymbolUrl?: string;
+    headerMessage?: string;
 }
 
 export default function EditPollPage() {
@@ -45,7 +46,8 @@ export default function EditPollPage() {
                 imagePreview: c.symbolUrl,
                 existingSymbolUrl: c.symbolUrl,
                 partySymbolPreview: c.partySymbolUrl,
-                existingPartySymbolUrl: c.partySymbolUrl
+                existingPartySymbolUrl: c.partySymbolUrl,
+                headerMessage: c.headerMessage || ''
             }));
             setCandidates(mappedCandidates);
             setLoading(false);
@@ -54,7 +56,7 @@ export default function EditPollPage() {
     }, [id]);
 
     const addCandidate = () => {
-        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null }]);
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null, headerMessage: '' }]);
     };
 
     const removeCandidate = (index: number) => {
@@ -145,6 +147,8 @@ export default function EditPollPage() {
                                 <label className={styles.label}><Type size={16} /> उप-शीर्षक (प्रभाग)</label>
                                 <input name="subTitle" defaultValue={poll.subTitle} className={styles.input} required />
                             </div>
+
+
 
                             <div className={styles.formGroup}>
                                 <label className={styles.label}><Briefcase size={16} /> पक्षाचे नाव</label>
@@ -266,6 +270,15 @@ export default function EditPollPage() {
                                             name={`candidateSeat_${i}`}
                                             className={styles.input}
                                             defaultValue={c.seat}
+                                        />
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 2 }}>
+                                        <label className={styles.label}>टेबल हेडर (Optional)</label>
+                                        <input
+                                            name={`candidateHeaderMsg_${i}`}
+                                            className={styles.input}
+                                            defaultValue={c.headerMessage || ''}
+                                            placeholder="Custom Message"
                                         />
                                     </div>
                                     <div className={styles.rowField} style={{ flex: 2 }}>

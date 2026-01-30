@@ -13,6 +13,7 @@ interface CandidateRow {
     sr: string;
     imagePreview: string | null;
     partySymbolPreview: string | null;
+    headerMessage?: string;
 }
 
 export default function CreatePollPage() {
@@ -33,12 +34,12 @@ export default function CreatePollPage() {
     };
 
     const [candidates, setCandidates] = useState<CandidateRow[]>([
-        { name: '', seat: 'अ', sr: '1', imagePreview: null, partySymbolPreview: null }
+        { name: '', seat: 'अ', sr: '1', imagePreview: null, partySymbolPreview: null, headerMessage: '' }
     ]);
     const [symbolPreview, setSymbolPreview] = useState<string | null>(null);
 
     const addCandidate = () => {
-        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null }]);
+        setCandidates([...candidates, { name: '', seat: '', sr: (candidates.length + 1).toString(), imagePreview: null, partySymbolPreview: null, headerMessage: '' }]);
     };
 
 
@@ -259,6 +260,8 @@ export default function CreatePollPage() {
                                 <input name="subTitle" className={styles.input} placeholder="उदा. प्रभाग क्रमांक २०" required />
                             </div>
 
+
+
                             <div className={styles.formGroup}>
                                 <label className={styles.label}><Briefcase size={16} /> पक्षाचे नाव</label>
                                 <input name="partyName" className={styles.input} placeholder="उदा. शिवसेना" required />
@@ -355,6 +358,16 @@ export default function CreatePollPage() {
                                             value={c.seat}
                                             onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
                                             placeholder="उदा. अ, ब, क"
+                                        />
+                                    </div>
+                                    <div className={styles.rowField} style={{ flex: 2 }}>
+                                        <label className={styles.label}>टेबल हेडर (Optional)</label>
+                                        <input
+                                            name={`candidateHeaderMsg_${i}`}
+                                            className={styles.input}
+                                            value={c.headerMessage || ''}
+                                            onChange={(e) => updateCandidate(i, 'headerMessage', e.target.value)}
+                                            placeholder="Custom Message"
                                         />
                                     </div>
                                     <div className={styles.rowField} style={{ flex: 2 }}>

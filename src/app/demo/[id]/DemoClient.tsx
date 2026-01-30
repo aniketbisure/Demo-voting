@@ -10,6 +10,7 @@ interface Candidate {
     serialNumber?: string;
     bgColor?: string;
     partySymbolUrl?: string;
+    headerMessage?: string;
 }
 
 
@@ -26,6 +27,7 @@ interface Poll {
     yellowFooterText?: string;
     showCandidateImages?: boolean;
     contactNumber?: string;
+    customMessage?: string;
     candidates: Candidate[];
 }
 
@@ -176,6 +178,17 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                         >
                             <table className={styles.candidateTable}>
                                 <thead>
+                                    {/* Custom Message Header Row */}
+                                    <tr className={styles.customMessageRow}>
+                                        <th
+                                            colSpan={poll.showCandidateImages ? 5 : 4}
+                                            className={styles.customMessageCell}
+                                        >
+                                            {/* You can customize this message or make it dynamic based on the group/seat */}
+                                            {/* Logic: 1. Candidate's own custom header (if any in group). 2. Poll global custom message. 3. SubTitle (Ward). 4. Default */}
+                                            {group.find(c => c.headerMessage)?.headerMessage || poll.customMessage || poll.subTitle || "Custom Message"}
+                                        </th>
+                                    </tr>
                                     <tr className={styles.tableHeader}>
                                         <th className={styles.headerCell}>अ. क्र.</th>
                                         <th className={styles.headerCell}>उमेदवार नाव</th>

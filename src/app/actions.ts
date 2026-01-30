@@ -33,6 +33,7 @@ export async function createPoll(formData: FormData) {
         const yellowFooterText = (formData.get('yellowFooterText') as string) || "";
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
+        const customMessage = (formData.get('customMessage') as string) || "";
 
         // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
@@ -55,6 +56,7 @@ export async function createPoll(formData: FormData) {
                 const name = formData.get(`candidateName_${index}`) as string;
                 const seat = formData.get(`candidateSeat_${index}`) as string;
                 const serialNumber = formData.get(`candidateSr_${index}`) as string;
+                const headerMessage = formData.get(`candidateHeaderMsg_${index}`) as string;
 
                 const candidateImageFile = formData.get(`candidateImage_${index}`) as File;
                 // For create, we don't have existing URLs, but follow same logic.
@@ -72,6 +74,7 @@ export async function createPoll(formData: FormData) {
                         serialNumber: serialNumber || (index + 1).toString(),
                         symbolUrl: candidateSymbolUrl,
                         partySymbolUrl: partySymbolUrl,
+                        headerMessage,
                         bgColor: '#fff'
                     };
                 }
@@ -98,6 +101,7 @@ export async function createPoll(formData: FormData) {
             yellowFooterText,
             showCandidateImages,
             contactNumber,
+            customMessage,
             candidates
         });
 
@@ -216,6 +220,7 @@ export async function updatePoll(id: string, formData: FormData) {
         const yellowFooterText = formData.get('yellowFooterText') as string;
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
+        const customMessage = (formData.get('customMessage') as string) || "";
 
         // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
@@ -245,6 +250,7 @@ export async function updatePoll(id: string, formData: FormData) {
                 const name = formData.get(`candidateName_${index}`) as string;
                 const seat = formData.get(`candidateSeat_${index}`) as string;
                 const serialNumber = formData.get(`candidateSr_${index}`) as string;
+                const headerMessage = formData.get(`candidateHeaderMsg_${index}`) as string;
 
                 const candidateImageFile = formData.get(`candidateImage_${index}`) as File;
                 const existingSymbolUrl = formData.get(`candidateExistingSymbol_${index}`) as string;
@@ -276,6 +282,7 @@ export async function updatePoll(id: string, formData: FormData) {
                         serialNumber: serialNumber || (index + 1).toString(),
                         symbolUrl: candidateSymbolUrl,
                         partySymbolUrl: partySymbolUrl,
+                        headerMessage,
                         bgColor: '#fff'
                     };
                 }
@@ -299,6 +306,7 @@ export async function updatePoll(id: string, formData: FormData) {
         existingPoll.yellowFooterText = yellowFooterText;
         existingPoll.showCandidateImages = showCandidateImages;
         existingPoll.contactNumber = contactNumber;
+        existingPoll.customMessage = customMessage;
         existingPoll.candidates = candidates;
 
         // If it was legacy, this is a new document created via `new Poll(...)`.
