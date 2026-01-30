@@ -70,6 +70,12 @@ export default function DemoClient({ poll }: { poll: Poll }) {
         // If already voted for this group, do nothing
         if (votes[groupIndex]) return;
 
+        // Play sound immediately for every vote
+        if (lastAudioRef.current) {
+            lastAudioRef.current.currentTime = 0;
+            lastAudioRef.current.play().catch(() => { });
+        }
+
         // Record vote
         const newVotes = { ...votes, [groupIndex]: candidateSr };
         setVotes(newVotes);
@@ -80,7 +86,6 @@ export default function DemoClient({ poll }: { poll: Poll }) {
 
         if (votedCount === totalGroups) {
             setTimeout(() => {
-                lastAudioRef.current?.play().catch(() => { });
                 setShowThankYou(true);
             }, 500);
         } else {
