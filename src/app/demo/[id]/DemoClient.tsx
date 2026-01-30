@@ -39,11 +39,13 @@ export default function DemoClient({ poll }: { poll: Poll }) {
     const [currentUnit, setCurrentUnit] = useState(0);
     const [shareUrl, setShareUrl] = useState('');
 
-    const lastAudioRef = useRef<HTMLAudioElement | null>(null);
+    const endAudioRef = useRef<HTMLAudioElement | null>(null);
+    const clickAudioRef = useRef<HTMLAudioElement | null>(null);
     const unitRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
-        lastAudioRef.current = new Audio('/sounds/sound.mp3');
+        endAudioRef.current = new Audio('/sounds/sound.mp3');
+        clickAudioRef.current = new Audio('/sounds/click.mp3');
         if (typeof window !== 'undefined') {
             setShareUrl(window.location.href);
         }
@@ -70,12 +72,6 @@ export default function DemoClient({ poll }: { poll: Poll }) {
         // If already voted for this group, do nothing
         if (votes[groupIndex]) return;
 
-        // Play sound immediately for every vote
-        if (lastAudioRef.current) {
-            lastAudioRef.current.currentTime = 0;
-            lastAudioRef.current.play().catch(() => { });
-        }
-
         // Record vote
         const newVotes = { ...votes, [groupIndex]: candidateSr };
         setVotes(newVotes);
@@ -83,6 +79,21 @@ export default function DemoClient({ poll }: { poll: Poll }) {
         // Check if all groups are voted
         const totalGroups = groupedCandidates.length;
         const votedCount = Object.keys(newVotes).length;
+
+        // Play Sound Logic
+        if (votedCount === totalGroups) {
+            // Last vote - play end sound (long beep)
+            if (endAudioRef.current) {
+                endAudioRef.current.currentTime = 0;
+                endAudioRef.current.play().catch(() => { });
+            }
+        } else {
+            // Normal vote - play click sound (short beep)
+            if (clickAudioRef.current) {
+                clickAudioRef.current.currentTime = 0;
+                clickAudioRef.current.play().catch(() => { });
+            }
+        }
 
         if (votedCount === totalGroups) {
             setTimeout(() => {
