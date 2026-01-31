@@ -52,16 +52,10 @@ export default function DemoClient({ poll }: { poll: Poll }) {
         }
     }, []);
 
-    // Group candidates by Seat
-    // We use a Map to preserve insertion order of the groups
+    // Group candidates by Seat (जि.प. सदस्य / पं.स. सदस्य for ZP, or A/B/C for Nagar Palika)
     const groupedCandidates = React.useMemo(() => {
-        if (poll.electionType === 'zp') {
-            return [poll.candidates];
-        }
-
         const groups = new Map<string, Candidate[]>();
         poll.candidates.forEach(c => {
-            // Normalise seat key (trim whitespace, handle case if needed, though exact match is safer)
             const key = c.seat ? c.seat.trim() : 'General';
             if (!groups.has(key)) {
                 groups.set(key, []);
@@ -69,7 +63,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
             groups.get(key)?.push(c);
         });
         return Array.from(groups.values());
-    }, [poll.candidates, poll.electionType]);
+    }, [poll.candidates]);
 
     const cardRowColors = ['#ffffff', '#ffb6c1', '#ffffe0', '#add8e6'];
 
@@ -172,128 +166,212 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     {poll.votingDate || "मतदान दि.- १५/०१/२०२६ रोजी स. ७ ते सायं. ६ पर्यंत"}
                 </div>
 
-                {/* EVM Cards (One per Group/Seat) */}
-                {groupedCandidates.map((group, groupIndex) => {
-                    const rowColor = cardRowColors[groupIndex % cardRowColors.length];
-                    const votedSr = votes[groupIndex]; // The SrNo voted for in this group (if any)
-                    const isGroupVoted = !!votedSr;
+                {/* EVM Cards (One container per Group for Nagar Palika, Single container for ZP) */}
+                {poll.electionType === 'zp' ? (
+                    <div className={styles.evmContainer} ref={(el) => { unitRefs.current[0] = el; }}>
+                        <table className={styles.candidateTable}>
+                            {groupedCandidates.map((group, groupIndex) => {
+                                const rowColor = cardRowColors[groupIndex % cardRowColors.length];
+                                const votedSr = votes[groupIndex];
+                                const isGroupVoted = !!votedSr;
 
-                    // Calculate max serial number in this group to determine rows
-                    let maxSr = 0;
-                    group.forEach(c => {
-                        const s = parseInt(c.serialNumber || '0');
-                        if (s > maxSr) maxSr = s;
-                    });
-                    // Ensure at least 3 rows, or maxSr + 1 (to show some empty below if needed, or just maxSr)
-                    // Standard EVM is usually 16 buttons. But for demo, let's keep it tight.
-                    // Previous logic was max(3, candSr + 1).
-                    // Let's use max(3, maxSr + 1) to be safe and consistent.
-                    const totalRows = Math.max(3, maxSr + 1);
-                    const rows = Array.from({ length: totalRows }, (_, idx) => idx + 1);
+                                let maxSr = 0;
+                                group.forEach(c => {
+                                    const s = parseInt(c.serialNumber || '0');
+                                    if (s > maxSr) maxSr = s;
+                                });
+                                const totalRows = Math.max(3, maxSr + 1);
+                                const rows = Array.from({ length: totalRows }, (_, idx) => idx + 1);
 
-                    return (
-                        <div
-                            key={groupIndex}
-                            className={styles.evmContainer}
-                            ref={(el) => { unitRefs.current[groupIndex] = el; }}
-                        >
-                            <table className={styles.candidateTable}>
-                                <thead>
-                                    {/* Custom Message Header Row */}
-                                    <tr className={styles.customMessageRow}>
-                                        <th
-                                            colSpan={poll.showCandidateImages ? 5 : 4}
-                                            className={styles.customMessageCell}
-                                        >
-                                            {/* You can customize this message or make it dynamic based on the group/seat */}
-                                            {/* Logic: 1. Candidate's own custom header (if any in group). 2. Poll global custom message. 3. SubTitle (Ward). 4. Default */}
-                                            {group.find(c => c.headerMessage)?.headerMessage || poll.customMessage || poll.subTitle || "Custom Message"}
-                                        </th>
-                                    </tr>
-                                    <tr className={styles.tableHeader}>
-                                        <th className={styles.headerCell}>अ. क्र.</th>
-                                        <th className={styles.headerCell}>उमेदवार नाव</th>
-                                        {poll.showCandidateImages && <th className={styles.headerCell}>फोटो</th>}
-                                        <th className={styles.headerCell}>चिन्ह</th>
-                                        <th className={styles.headerCell}>बटन</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {rows.map((rowNum) => {
-                                        // Find candidate for this row number
-                                        const candidate = group.find(c => parseInt(c.serialNumber || '0') === rowNum);
-                                        const isCandidateRow = !!candidate;
-                                        const isVotedRow = isGroupVoted && (candidate?.serialNumber === votedSr);
+                                return (
+                                    <React.Fragment key={groupIndex}>
+                                        <thead>
+                                            <tr className={styles.customMessageRow}>
+                                                <th
+                                                    colSpan={poll.showCandidateImages ? 5 : 4}
+                                                    className={styles.customMessageCell}
+                                                    style={{ backgroundColor: groupIndex === 0 ? '#d32f2f' : '#2e7d32' }}
+                                                >
+                                                    {group[0]?.seat || poll.subTitle} {poll.subTitle && !group[0]?.seat.includes(poll.subTitle) ? `- ${poll.subTitle}` : ''}
+                                                </th>
+                                            </tr>
+                                            <tr className={styles.tableHeader}>
+                                                <th className={styles.headerCell}>अ. क्र.</th>
+                                                <th className={styles.headerCell}>उमेदवार नाव</th>
+                                                {poll.showCandidateImages && <th className={styles.headerCell}>फोटो</th>}
+                                                <th className={styles.headerCell}>चिन्ह</th>
+                                                <th className={styles.headerCell}>बटन</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {rows.map((rowNum) => {
+                                                const candidate = group.find(c => parseInt(c.serialNumber || '0') === rowNum);
+                                                const isCandidateRow = !!candidate;
+                                                const isVotedRow = isGroupVoted && (candidate?.serialNumber === votedSr);
 
-                                        // If group is voted, we might want to dim others? 
-                                        // Current logic: "If voted, hide all rows except the main candidate row" -> Wait, previous code did this.
-                                        // Previous: "if (isVoted && !isMainRow) return null;"
-                                        // This collapses the table to ONLY show the voted candidate?
-                                        // Let's keep that behavior if it's desired. User didn't complain.
-                                        // "if we have have same जागा in form then same they in same box" - user wants them grouped.
-                                        // If I vote for A, should B disappear?
-                                        // Previous logic: YES. "If voted, hide all rows except the main candidate row".
-                                        // We should probably maintain this behavior for visual consistency (it focuses on the selection).
-                                        // BUT now we have multiple potential candidates.
-                                        // If I vote for A, and B is in the same box... B disappears. Okay.
+                                                if (isGroupVoted && !isVotedRow) return null;
 
-                                        if (isGroupVoted && !isVotedRow) return null;
+                                                return (
+                                                    <tr
+                                                        key={rowNum}
+                                                        className={`${styles.row} ${isVotedRow ? styles.votedRow : ''}`}
+                                                        style={{ backgroundColor: rowColor }}
+                                                    >
+                                                        <td className={`${styles.cellSr} ${isCandidateRow ? styles.redBorder : ''} ${isVotedRow || (isCandidateRow && !isGroupVoted) ? styles.targetSr : ''}`}>
+                                                            {rowNum}.
+                                                        </td>
+                                                        <td className={styles.cellName}>
+                                                            {candidate ? candidate.name : ''}
+                                                        </td>
+                                                        {poll.showCandidateImages && (
+                                                            <td className={styles.cellCandidate}>
+                                                                {candidate && (
+                                                                    <img src={candidate.symbolUrl} alt={candidate.name} className={styles.candidateImg} />
+                                                                )}
+                                                            </td>
+                                                        )}
+                                                        <td className={styles.cellSymbol}>
+                                                            {candidate && (
+                                                                <>
+                                                                    <img src={candidate.partySymbolUrl || poll.mainSymbolUrl}
+                                                                        alt="Symbol"
+                                                                        className={styles.symbolImg} />
+                                                                    {isVotedRow && <div className={styles.redLamp}></div>}
+                                                                </>
+                                                            )}
+                                                        </td>
+                                                        <td className={styles.cellButton}>
+                                                            <div className={styles.buttonArea}>
+                                                                <svg className={`${styles.arrow} ${isVotedRow ? styles.votedArrow : ''}`} viewBox="0 0 100 50">
+                                                                    <path d="M5,15 L60,15 L60,5 L95,25 L60,45 L60,35 L5,35 Z"
+                                                                        fill={isVotedRow ? 'red' : 'none'}
+                                                                        stroke={isVotedRow ? 'red' : 'black'}
+                                                                        strokeWidth="2" />
+                                                                </svg>
+                                                                <button
+                                                                    className={styles.blueButton}
+                                                                    onClick={() => candidate && handleVote(groupIndex, candidate.serialNumber || rowNum.toString())}
+                                                                    disabled={isGroupVoted}
+                                                                    style={{ cursor: isGroupVoted ? 'default' : 'pointer' }}
+                                                                >
+                                                                    बटण दाबा
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </table>
+                    </div>
+                ) : (
+                    groupedCandidates.map((group, groupIndex) => {
+                        const rowColor = cardRowColors[groupIndex % cardRowColors.length];
+                        const votedSr = votes[groupIndex]; // The SrNo voted for in this group (if any)
+                        const isGroupVoted = !!votedSr;
 
-                                        return (
-                                            <tr
-                                                key={rowNum}
-                                                className={`${styles.row} ${isVotedRow ? styles.votedRow : ''}`}
-                                                style={{ backgroundColor: rowColor }}
+                        // Calculate max serial number in this group to determine rows
+                        let maxSr = 0;
+                        group.forEach(c => {
+                            const s = parseInt(c.serialNumber || '0');
+                            if (s > maxSr) maxSr = s;
+                        });
+                        const totalRows = Math.max(3, maxSr + 1);
+                        const rows = Array.from({ length: totalRows }, (_, idx) => idx + 1);
+
+                        return (
+                            <div
+                                key={groupIndex}
+                                className={styles.evmContainer}
+                                ref={(el) => { unitRefs.current[groupIndex] = el; }}
+                            >
+                                <table className={styles.candidateTable}>
+                                    <thead>
+                                        {/* Custom Message Header Row */}
+                                        <tr className={styles.customMessageRow}>
+                                            <th
+                                                colSpan={poll.showCandidateImages ? 5 : 4}
+                                                className={styles.customMessageCell}
                                             >
-                                                <td className={`${styles.cellSr} ${isCandidateRow ? styles.redBorder : ''} ${isVotedRow || (isCandidateRow && !isGroupVoted) ? styles.targetSr : ''}`}>
-                                                    {rowNum}.
-                                                </td>
-                                                <td className={styles.cellName}>
-                                                    {candidate ? candidate.name : ''}
-                                                </td>
-                                                {poll.showCandidateImages && (
-                                                    <td className={styles.cellCandidate}>
+                                                {group.find(c => c.headerMessage)?.headerMessage || poll.customMessage || poll.subTitle || "Custom Message"}
+                                            </th>
+                                        </tr>
+                                        <tr className={styles.tableHeader}>
+                                            <th className={styles.headerCell}>अ. क्र.</th>
+                                            <th className={styles.headerCell}>उमेदवार नाव</th>
+                                            {poll.showCandidateImages && <th className={styles.headerCell}>फोटो</th>}
+                                            <th className={styles.headerCell}>चिन्ह</th>
+                                            <th className={styles.headerCell}>बटन</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {rows.map((rowNum) => {
+                                            // Find candidate for this row number
+                                            const candidate = group.find(c => parseInt(c.serialNumber || '0') === rowNum);
+                                            const isCandidateRow = !!candidate;
+                                            const isVotedRow = isGroupVoted && (candidate?.serialNumber === votedSr);
+
+                                            if (isGroupVoted && !isVotedRow) return null;
+
+                                            return (
+                                                <tr
+                                                    key={rowNum}
+                                                    className={`${styles.row} ${isVotedRow ? styles.votedRow : ''}`}
+                                                    style={{ backgroundColor: rowColor }}
+                                                >
+                                                    <td className={`${styles.cellSr} ${isCandidateRow ? styles.redBorder : ''} ${isVotedRow || (isCandidateRow && !isGroupVoted) ? styles.targetSr : ''}`}>
+                                                        {rowNum}.
+                                                    </td>
+                                                    <td className={styles.cellName}>
+                                                        {candidate ? candidate.name : ''}
+                                                    </td>
+                                                    {poll.showCandidateImages && (
+                                                        <td className={styles.cellCandidate}>
+                                                            {candidate && (
+                                                                <img src={candidate.symbolUrl} alt={candidate.name} className={styles.candidateImg} />
+                                                            )}
+                                                        </td>
+                                                    )}
+                                                    <td className={styles.cellSymbol}>
                                                         {candidate && (
-                                                            <img src={candidate.symbolUrl} alt={candidate.name} className={styles.candidateImg} />
+                                                            <>
+                                                                <img src={candidate.partySymbolUrl || poll.mainSymbolUrl}
+                                                                    alt="Symbol"
+                                                                    className={styles.symbolImg} />
+                                                                {isVotedRow && <div className={styles.redLamp}></div>}
+                                                            </>
                                                         )}
                                                     </td>
-                                                )}
-                                                <td className={styles.cellSymbol}>
-                                                    {candidate && (
-                                                        <>
-                                                            <img src={candidate.partySymbolUrl || poll.mainSymbolUrl}
-                                                                alt="Symbol"
-                                                                className={styles.symbolImg} />
-                                                            {isVotedRow && <div className={styles.redLamp}></div>}
-                                                        </>
-                                                    )}
-                                                </td>
-                                                <td className={styles.cellButton}>
-                                                    <div className={styles.buttonArea}>
-                                                        <svg className={`${styles.arrow} ${isVotedRow ? styles.votedArrow : ''}`} viewBox="0 0 100 50">
-                                                            <path d="M5,15 L60,15 L60,5 L95,25 L60,45 L60,35 L5,35 Z"
-                                                                fill={isVotedRow ? 'red' : 'none'}
-                                                                stroke={isVotedRow ? 'red' : 'black'}
-                                                                strokeWidth="2" />
-                                                        </svg>
-                                                        <button
-                                                            className={styles.blueButton}
-                                                            onClick={() => candidate && handleVote(groupIndex, candidate.serialNumber || rowNum.toString())}
-                                                            disabled={isGroupVoted} // Disable all buttons in this group if voted
-                                                            style={{ cursor: isGroupVoted ? 'default' : 'pointer' }}
-                                                        >
-                                                            बटण दाबा
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
-                    );
-                })}
+                                                    <td className={styles.cellButton}>
+                                                        <div className={styles.buttonArea}>
+                                                            <svg className={`${styles.arrow} ${isVotedRow ? styles.votedArrow : ''}`} viewBox="0 0 100 50">
+                                                                <path d="M5,15 L60,15 L60,5 L95,25 L60,45 L60,35 L5,35 Z"
+                                                                    fill={isVotedRow ? 'red' : 'none'}
+                                                                    stroke={isVotedRow ? 'red' : 'black'}
+                                                                    strokeWidth="2" />
+                                                            </svg>
+                                                            <button
+                                                                className={styles.blueButton}
+                                                                onClick={() => candidate && handleVote(groupIndex, candidate.serialNumber || rowNum.toString())}
+                                                                disabled={isGroupVoted} // Disable all buttons in this group if voted
+                                                                style={{ cursor: isGroupVoted ? 'default' : 'pointer' }}
+                                                            >
+                                                                बटण दाबा
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        );
+                    })
+                )}
 
 
                 {/* Footer */}
