@@ -86,8 +86,9 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                 endAudioRef.current.currentTime = 0;
                 endAudioRef.current.play().catch(() => { });
             }
-        } else {
-            // Normal vote - play click sound (short beep)
+        } else if (poll.electionType !== 'zp') {
+            // For non-ZP elections, play click sound on intermediate votes
+            // For ZP, we skip sound on the first button as requested
             if (clickAudioRef.current) {
                 clickAudioRef.current.currentTime = 0;
                 clickAudioRef.current.play().catch(() => { });
