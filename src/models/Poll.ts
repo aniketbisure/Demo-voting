@@ -25,6 +25,7 @@ export interface IPoll extends Document {
     showCandidateImages: boolean;
     contactNumber?: string;
     customMessage?: string;
+    electionType: 'nagar-palika' | 'zp';
     candidates: ICandidate[];
     createdAt: Date;
 }
@@ -54,6 +55,7 @@ const PollSchema = new Schema<IPoll>({
     showCandidateImages: { type: Boolean, default: true },
     contactNumber: { type: String },
     customMessage: { type: String },
+    electionType: { type: String, enum: ['nagar-palika', 'zp'], default: 'nagar-palika' },
     candidates: [CandidateSchema],
     createdAt: { type: Date, default: Date.now }
 });

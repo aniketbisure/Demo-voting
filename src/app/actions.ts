@@ -34,6 +34,7 @@ export async function createPoll(formData: FormData) {
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
         const customMessage = (formData.get('customMessage') as string) || "";
+        const electionType = (formData.get('electionType') as string) || "nagar-palika";
 
         // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
@@ -102,6 +103,7 @@ export async function createPoll(formData: FormData) {
             showCandidateImages,
             contactNumber,
             customMessage,
+            electionType,
             candidates
         });
 
@@ -221,6 +223,8 @@ export async function updatePoll(id: string, formData: FormData) {
         const showCandidateImages = formData.get('showCandidateImages') === 'true';
         const contactNumber = (formData.get('contactNumber') as string) || "";
         const customMessage = (formData.get('customMessage') as string) || "";
+        const electionType = (formData.get('electionType') as string) || "nagar-palika";
+
 
         // Handle Main Symbol
         const symbolFile = formData.get('mainSymbolFile') as File;
@@ -307,6 +311,7 @@ export async function updatePoll(id: string, formData: FormData) {
         existingPoll.showCandidateImages = showCandidateImages;
         existingPoll.contactNumber = contactNumber;
         existingPoll.customMessage = customMessage;
+        existingPoll.electionType = electionType as any;
         existingPoll.candidates = candidates;
 
         // If it was legacy, this is a new document created via `new Poll(...)`.

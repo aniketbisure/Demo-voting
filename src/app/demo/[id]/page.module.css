@@ -11,6 +11,24 @@
     margin: 0 auto;
 }
 
+.zpWrapper {
+    background: linear-gradient(180deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.zpWrapper .evmContainer {
+    border: 2px solid #d32f2f;
+    box-shadow: 0 10px 25px rgba(211, 47, 47, 0.15);
+}
+
+.zpWrapper .candidateTable {
+    border: 2px solid #d32f2f;
+}
+
+.zpWrapper .customMessageCell {
+    background-color: #d32f2f;
+    color: white !important;
+}
+
 /* Header Gradient */
 .headerGradient {
     background: linear-gradient(90deg, rgb(254, 144, 5) 0%, rgb(246, 80, 6) 50%);

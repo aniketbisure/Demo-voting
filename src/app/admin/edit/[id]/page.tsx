@@ -134,8 +134,9 @@ export default function EditPollPage() {
                 </div>
 
                 <form action={(formData) => updatePoll(id, formData)} className={styles.form}>
+                    <input type="hidden" name="electionType" value={poll.electionType || 'nagar-palika'} />
                     <section className={styles.section}>
-                        <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती</h2>
+                        <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती ({poll.electionType === 'zp' ? 'ZP' : 'नगरपालिका'})</h2>
 
                         <div className={styles.formGrid}>
                             <div className={styles.formGroup}>
@@ -144,7 +145,7 @@ export default function EditPollPage() {
                             </div>
 
                             <div className={styles.formGroup}>
-                                <label className={styles.label}><Type size={16} /> उप-शीर्षक (प्रभाग)</label>
+                                <label className={styles.label}><Type size={16} /> उप-शीर्षक {poll.electionType === 'zp' ? '(गट/गण)' : '(प्रभाग)'}</label>
                                 <input name="subTitle" defaultValue={poll.subTitle} className={styles.input} required />
                             </div>
 
@@ -264,13 +265,27 @@ export default function EditPollPage() {
                                             required
                                         />
                                     </div>
-                                    <div className={styles.rowField} style={{ flex: 1 }}>
-                                        <label className={styles.label}>जागा</label>
-                                        <input
-                                            name={`candidateSeat_${i}`}
-                                            className={styles.input}
-                                            defaultValue={c.seat}
-                                        />
+                                    <div className={styles.rowField} style={{ flex: 1.5 }}>
+                                        <label className={styles.label}>{poll.electionType === 'zp' ? 'पद निवडा' : 'जागा'}</label>
+                                        {poll.electionType === 'zp' ? (
+                                            <select
+                                                name={`candidateSeat_${i}`}
+                                                className={styles.input}
+                                                defaultValue={c.seat}
+                                                required
+                                            >
+                                                <option value="">निवडा</option>
+                                                <option value="जि.प. सदस्य">जि.प. सदस्य</option>
+                                                <option value="पं.स. सदस्य">पं.स. सदस्य</option>
+                                            </select>
+                                        ) : (
+                                            <input
+                                                name={`candidateSeat_${i}`}
+                                                className={styles.input}
+                                                defaultValue={c.seat}
+                                                placeholder="उदा. अ, ब, क"
+                                            />
+                                        )}
                                     </div>
                                     <div className={styles.rowField} style={{ flex: 2 }}>
                                         <label className={styles.label}>टेबल हेडर (Optional)</label>

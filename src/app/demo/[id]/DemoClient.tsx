@@ -28,6 +28,7 @@ interface Poll {
     showCandidateImages?: boolean;
     contactNumber?: string;
     customMessage?: string;
+    electionType?: 'nagar-palika' | 'zp';
     candidates: Candidate[];
 }
 
@@ -54,6 +55,10 @@ export default function DemoClient({ poll }: { poll: Poll }) {
     // Group candidates by Seat
     // We use a Map to preserve insertion order of the groups
     const groupedCandidates = React.useMemo(() => {
+        if (poll.electionType === 'zp') {
+            return [poll.candidates];
+        }
+
         const groups = new Map<string, Candidate[]>();
         poll.candidates.forEach(c => {
             // Normalise seat key (trim whitespace, handle case if needed, though exact match is safer)
@@ -64,7 +69,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
             groups.get(key)?.push(c);
         });
         return Array.from(groups.values());
-    }, [poll.candidates]);
+    }, [poll.candidates, poll.electionType]);
 
     const cardRowColors = ['#ffffff', '#ffb6c1', '#ffffe0', '#add8e6'];
 
@@ -118,7 +123,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
     const defaultYellowFooter = "यांना त्यांच्या नाव व चिन्हासमोरील बटन दाबून प्रचंड मताने विजयी करा!";
 
     return (
-        <main className={styles.mainWrapper}>
+        <main className={`${styles.mainWrapper} ${poll.electionType === 'zp' ? styles.zpWrapper : ''}`}>
             <div className={styles.container}>
 
                 {/* Header */}
@@ -152,7 +157,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                     <ul className={styles.candidateList}>
                         {poll.candidates.map((c, i) => (
                             <li key={i}>
-                                <strong>जागा {c.seat}</strong> - {c.name}
+                                <strong>{poll.electionType === 'zp' ? '' : 'जागा '}{c.seat}</strong> - {c.name}
                             </li>
                         ))}
                     </ul>
@@ -325,7 +330,7 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                             <div className={styles.modalImageContainer}>
                                                 <img src={c.symbolUrl} alt={c.name} />
                                             </div>
-                                            <div className={styles.modalSeatLabel}>जागा {c.seat}</div>
+                                            <div className={styles.modalSeatLabel}>{poll.electionType === 'zp' ? '' : 'जागा '}{c.seat}</div>
                                             <div className={styles.modalCandidateName}>{c.name}</div>
                                         </div>
                                     ))}

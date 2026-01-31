@@ -5,7 +5,7 @@ import { createPoll } from './actions';
 import styles from './page.module.css';
 import loaderStyles from './loader.module.css';
 import { compressImage } from '@/utils/imageCompressor';
-import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type } from 'lucide-react';
+import { Plus, Trash2, Vote, Calendar, Image as ImageIcon, Briefcase, Type, LayoutDashboard } from 'lucide-react';
 
 interface CandidateRow {
     name: string;
@@ -20,6 +20,8 @@ export default function CreatePollPage() {
     const [password, setPassword] = useState('');
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [error, setError] = useState('');
+    const [electionType, setElectionType] = useState<'nagar-palika' | 'zp' | null>(null);
+    const [showSelectionModal, setShowSelectionModal] = useState(true);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -207,6 +209,24 @@ export default function CreatePollPage() {
 
     return (
         <main className={styles.main}>
+            {showSelectionModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <h2 className={styles.modalTitle}>निवडणुकीचा प्रकार निवडा</h2>
+                        <div className={styles.selectionGrid}>
+                            <div className={styles.selectionCard} onClick={() => { setElectionType('nagar-palika'); setShowSelectionModal(false); }}>
+                                <Briefcase className={styles.selectionIcon} />
+                                <h3>नगरपालिका</h3>
+                            </div>
+                            <div className={styles.selectionCard} onClick={() => { setElectionType('zp'); setShowSelectionModal(false); }}>
+                                <LayoutDashboard className={styles.selectionIcon} />
+                                <h3>ZP (जिल्हा परिषद)</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {isSubmitting && (
                 <div className={loaderStyles.loaderOverlay}>
                     <div className={loaderStyles.loaderContainer}>
@@ -242,10 +262,14 @@ export default function CreatePollPage() {
                 <div className={styles.header}>
                     <Vote className={styles.headerIcon} />
                     <h1 className={styles.title}>डेमो मतदान यंत्र तयार करा</h1>
-                    <p className={styles.subtitle}>निवडणूक तपशील भरा आणि नवीन पोल तयार करा</p>
+                    <p className={styles.subtitle}>
+                        निवडणूक तपशील भरा आणि नवीन पोल तयार करा ({electionType === 'zp' ? 'ZP' : 'नगरपालिका'})
+                        <button type="button" onClick={() => setShowSelectionModal(true)} style={{ marginLeft: '10px', fontSize: '0.8rem', padding: '2px 8px', borderRadius: '4px', border: '1px solid #ccc', cursor: 'pointer' }}>प्रकार बदला</button>
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className={styles.form}>
+                    <input type="hidden" name="electionType" value={electionType || 'nagar-palika'} />
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}><Briefcase size={20} /> सामान्य माहिती</h2>
 
@@ -256,8 +280,8 @@ export default function CreatePollPage() {
                             </div>
 
                             <div className={styles.formGroup}>
-                                <label className={styles.label}><Type size={16} /> उप-शीर्षक (प्रभाग)</label>
-                                <input name="subTitle" className={styles.input} placeholder="उदा. प्रभाग क्रमांक २०" required />
+                                <label className={styles.label}><Type size={16} /> उप-शीर्षक {electionType === 'zp' ? '(गट/गण)' : '(प्रभाग)'}</label>
+                                <input name="subTitle" className={styles.input} placeholder={electionType === 'zp' ? 'उदा. गट : ०४ आंबाडे' : 'उदा. प्रभाग क्रमांक २०'} required />
                             </div>
 
 
@@ -350,15 +374,29 @@ export default function CreatePollPage() {
                                             required
                                         />
                                     </div>
-                                    <div className={styles.rowField} style={{ flex: 1 }}>
-                                        <label className={styles.label}>जागा</label>
-                                        <input
-                                            name={`candidateSeat_${i}`}
-                                            className={styles.input}
-                                            value={c.seat}
-                                            onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
-                                            placeholder="उदा. अ, ब, क"
-                                        />
+                                    <div className={styles.rowField} style={{ flex: 1.5 }}>
+                                        <label className={styles.label}>{electionType === 'zp' ? 'पद निवडा' : 'जागा'}</label>
+                                        {electionType === 'zp' ? (
+                                            <select
+                                                name={`candidateSeat_${i}`}
+                                                className={styles.input}
+                                                value={c.seat}
+                                                onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
+                                                required
+                                            >
+                                                <option value="">निवडा</option>
+                                                <option value="जि.प. सदस्य">जि.प. सदस्य</option>
+                                                <option value="पं.स. सदस्य">पं.स. सदस्य</option>
+                                            </select>
+                                        ) : (
+                                            <input
+                                                name={`candidateSeat_${i}`}
+                                                className={styles.input}
+                                                value={c.seat}
+                                                onChange={(e) => updateCandidate(i, 'seat', e.target.value)}
+                                                placeholder="उदा. अ, ब, क"
+                                            />
+                                        )}
                                     </div>
                                     <div className={styles.rowField} style={{ flex: 2 }}>
                                         <label className={styles.label}>टेबल हेडर (Optional)</label>
