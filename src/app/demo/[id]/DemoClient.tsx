@@ -191,9 +191,9 @@ export default function DemoClient({ poll }: { poll: Poll }) {
                                                 <th
                                                     colSpan={poll.showCandidateImages ? 5 : 4}
                                                     className={styles.customMessageCell}
-                                                    style={{ backgroundColor: groupIndex === 0 ? '#d32f2f' : '#2e7d32' }}
+                                                    style={{ backgroundColor: 'white', color: 'black', borderBottom: '1.5px solid black' }}
                                                 >
-                                                    {group[0]?.seat || poll.subTitle} {poll.subTitle && !group[0]?.seat.includes(poll.subTitle) ? `- ${poll.subTitle}` : ''}
+                                                    {group.find(c => c.headerMessage)?.headerMessage || `${group[0]?.seat || poll.subTitle} ${poll.subTitle && !group[0]?.seat.includes(poll.subTitle) ? `- ${poll.subTitle}` : ''}`}
                                                 </th>
                                             </tr>
                                             <tr className={styles.tableHeader}>
